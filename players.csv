@@ -1,0 +1,686 @@
+team_name,player_name
+Manchester City,Ederson
+Manchester City,Kyle Walker
+Manchester City,John Stones
+Manchester City,Ruben Dias
+Manchester City,Manuel Akanji
+Manchester City,Nathan Ake
+Manchester City,Joseko Gvardiol
+Manchester City,Rodri
+Manchester City,Kevin De Bruyne
+Manchester City,Bernardo Silva
+Manchester City,Phil Foden
+Manchester City,Jack Grealish
+Manchester City,Jeremy Doku
+Manchester City,Julian Alvarez
+Manchester City,Erling Haaland
+Manchester City,Mateo Kovacic
+Manchester City,Rico Lewis
+Manchester City,Stefan Ortega
+Bayern Munich,Manuel Neuer
+Bayern Munich,Joshua Kimmich
+Bayern Munich,Dayot Upamecano
+Bayern Munich,Kim Min-jae
+Bayern Munich,Alphonso Davies
+Bayern Munich,Leon Goretzka
+Bayern Munich,Konrad Laimer
+Bayern Munich,Aleksandar Pavlovic
+Bayern Munich,Joao Palhinha
+Bayern Munich,Thomas Muller
+Bayern Munich,Serge Gnabry
+Bayern Munich,Leroy Sane
+Bayern Munich,Kingsley Coman
+Bayern Munich,Michael Olise
+Bayern Munich,Harry Kane
+Bayern Munich,Mathys Tel
+Bayern Munich,Sacha Boey
+Bayern Munich,Raphael Guerreiro
+Real Madrid,Thibaut Courtois
+Real Madrid,Dani Carvajal
+Real Madrid,Eder Militao
+Real Madrid,Antonio Rudiger
+Real Madrid,David Alaba
+Real Madrid,Ferland Mendy
+Real Madrid,Jude Bellingham
+Real Madrid,Toni Kroos
+Real Madrid,Luka Modric
+Real Madrid,Federico Valverde
+Real Madrid,Eduardo Camavinga
+Real Madrid,Aurelien Tchouameni
+Real Madrid,Arda Guler
+Real Madrid,Vinicius Junior
+Real Madrid,Rodrygo
+Real Madrid,Joselu
+Real Madrid,Brahim Diaz
+Real Madrid,Lucas Vazquez
+Paris Saint-Germain,Gianluigi Donnarumma
+Paris Saint-Germain,Achraf Hakimi
+Paris Saint-Germain,Marquinhos
+Paris Saint-Germain,Lucas Hernandez
+Paris Saint-Germain,Milan Skriniar
+Paris Saint-Germain,Nuno Mendes
+Paris Saint-Germain,Vitinha
+Paris Saint-Germain,Warren Zaire-Emery
+Paris Saint-Germain,Fabian Ruiz
+Paris Saint-Germain,Lee Kang-in
+Paris Saint-Germain,Bradley Barcola
+Paris Saint-Germain,Randal Kolo Muani
+Paris Saint-Germain,Goncalo Ramos
+Paris Saint-Germain,Ousmane Dembele
+Paris Saint-Germain,Marco Asensio
+Paris Saint-Germain,Manuel Ugarte
+Paris Saint-Germain,Nordi Mukiele
+Paris Saint-Germain,Keylor Navas
+Liverpool,Alisson Becker
+Liverpool,Trent Alexander-Arnold
+Liverpool,Ibrahima Konate
+Liverpool,Virgil van Dijk
+Liverpool,Joe Gomez
+Liverpool,Kostas Tsimikas
+Liverpool,Andy Robertson
+Liverpool,Alexis Mac Allister
+Liverpool,Dominik Szoboszlai
+Liverpool,Ryan Gravenberch
+Liverpool,Curtis Jones
+Liverpool,Harvey Elliott
+Liverpool,Mohamed Salah
+Liverpool,Darwin Nunez
+Liverpool,Cody Gakpo
+Liverpool,Luis Diaz
+Liverpool,Diogo Jota
+Liverpool,Jarrel Quansah
+Liverpool,Conor Bradley
+Inter Milan,Yann Sommer
+Inter Milan,Benjamin Pavard
+Inter Milan,Stefan de Vrij
+Inter Milan,Alessandro Bastoni
+Inter Milan,Matteo Darmian
+Inter Milan,Federico Dimarco
+Inter Milan,Denzel Dumfries
+Inter Milan,Hakan Calhanoglu
+Inter Milan,Nicolo Barella
+Inter Milan,Henrikh Mkhitaryan
+Inter Milan,Davide Frattesi
+Inter Milan,Kristjan Asllani
+Inter Milan,Lautaro Martinez
+Inter Milan,Marcus Thuram
+Inter Milan,Marko Arnautovic
+Inter Milan,Alexis Sanchez
+Inter Milan,Tajon Buchanan
+Inter Milan,Francesco Acerbi
+Borussia Dortmund,Gregor Kobel
+Borussia Dortmund,Julian Ryerson
+Borussia Dortmund,Nico Schlotterbeck
+Borussia Dortmund,Niklas Sule
+Borussia Dortmund,Ramy Bensebaini
+Borussia Dortmund,Mats Hummels
+Borussia Dortmund,Emre Can
+Borussia Dortmund,Marcel Sabitzer
+Borussia Dortmund,Felix Nmecha
+Borussia Dortmund,Julian Brandt
+Borussia Dortmund,Marco Reus
+Borussia Dortmund,Donyell Malen
+Borussia Dortmund,Karim Adeyemi
+Borussia Dortmund,Jadon Sancho
+Borussia Dortmund,Niclas Fullkrug
+Borussia Dortmund,Sebastian Haller
+Borussia Dortmund,Youssoufa Moukoko
+Borussia Dortmund,Jamie Bynoe-Gittens
+RB Leipzig,Peter Gulacsi
+RB Leipzig,Lukas Klostermann
+RB Leipzig,Mohamed Simakan
+RB Leipzig,Willi Orban
+RB Leipzig,David Raum
+RB Leipzig,Benjamin Henrichs
+RB Leipzig,Xaver Schlager
+RB Leipzig,Amadou Haidara
+RB Leipzig,Dani Olmo
+RB Leipzig,Xavi Simons
+RB Leipzig,Christoph Baumgartner
+RB Leipzig,Eljif Elmas
+RB Leipzig,Lois Openda
+RB Leipzig,Benjamin Sesko
+RB Leipzig,Yussuf Poulsen
+RB Leipzig,Emil Forsberg
+RB Leipzig,Kevin Kampl
+RB Leipzig,Leopold Zingerle
+Barcelona,Marc-Andre ter Stegen
+Barcelona,Jules Kounde
+Barcelona,Ronald Araujo
+Barcelona,Pau Cubarsi
+Barcelona,Inigo Martinez
+Barcelona,Alejandro Balde
+Barcelona,Joao Cancelo
+Barcelona,Frenkie de Jong
+Barcelona,Ilkay Gundogan
+Barcelona,Pedri
+Barcelona,Gavi
+Barcelona,Fermin Lopez
+Barcelona,Raphinha
+Barcelona,Joao Felix
+Barcelona,Ferran Torres
+Barcelona,Lamine Yamal
+Barcelona,Robert Lewandowski
+Barcelona,Andreas Christensen
+Arsenal,David Raya
+Arsenal,Bukayo Saka
+Arsenal,William Saliba
+Arsenal,Gabriel Magalhaes
+Arsenal,Ben White
+Arsenal,Oleksandr Zinchenko
+Arsenal,Takehiro Tomiyasu
+Arsenal,Jakub Kiwior
+Arsenal,Martin Odegaard
+Arsenal,Declan Rice
+Arsenal,Kai Havertz
+Arsenal,Jorginho
+Arsenal,Thomas Partey
+Arsenal,Emile Smith Rowe
+Arsenal,Gabriel Martinelli
+Arsenal,Leandro Trossard
+Arsenal,Gabriel Jesus
+Arsenal,Eddie Nketiah
+Arsenal,Reiss Nelson
+Arsenal,Aaron Ramsdale
+Atletico Madrid,Jan Oblak
+Atletico Madrid,Jose Gimenez
+Atletico Madrid,Stefan Savic
+Atletico Madrid,Mario Hermoso
+Atletico Madrid,Nahuel Molina
+Atletico Madrid,Axel Witsel
+Atletico Madrid,Cesar Azpilicueta
+Atletico Madrid,Reinildo
+Atletico Madrid,Koke
+Atletico Madrid,Rodrigo De Paul
+Atletico Madrid,Marcos Llorente
+Atletico Madrid,Pablo Barrios
+Atletico Madrid,Saul Niguez
+Atletico Madrid,Antoine Griezmann
+Atletico Madrid,Alvaro Morata
+Atletico Madrid,Angel Correa
+Atletico Madrid,Memphis Depay
+Atletico Madrid,Arthur Vermeeren
+Atletico Madrid,Gabriel Paulista
+Manchester United,Andre Onana
+Manchester United,Diogo Dalot
+Manchester United,Raphael Varane
+Manchester United,Lisandro Martinez
+Manchester United,Victor Lindelof
+Manchester United,Harry Maguire
+Manchester United,Luke Shaw
+Manchester United,Aaron Wan-Bissaka
+Manchester United,Casemiro
+Manchester United,Bruno Fernandes
+Manchester United,Kobbie Mainoo
+Manchester United,Mason Mount
+Manchester United,Scott McTominay
+Manchester United,Sofyan Amrabat
+Manchester United,Christian Eriksen
+Manchester United,Marcus Rashford
+Manchester United,Rasmus Hojlund
+Manchester United,Alejandro Garnacho
+Manchester United,Antony
+Manchester United,Altay Bayindir
+Newcastle United,Nick Pope
+Newcastle United,Kieran Trippier
+Newcastle United,Fabian Schar
+Newcastle United,Sven Botman
+Newcastle United,Dan Burn
+Newcastle United,Jamaal Lascelles
+Newcastle United,Tino Livramento
+Newcastle United,Bruno Guimaraes
+Newcastle United,Sandro Tonali
+Newcastle United,Joelinton
+Newcastle United,Sean Longstaff
+Newcastle United,Elliot Anderson
+Newcastle United,Lewis Miley
+Newcastle United,Miguel Almiron
+Newcastle United,Anthony Gordon
+Newcastle United,Harvey Barnes
+Newcastle United,Alexander Isak
+Newcastle United,Callum Wilson
+Newcastle United,Jacob Murphy
+Newcastle United,Martin Dubravka
+Juventus,Wojciech Szczesny
+Juventus,Gleison Bremer
+Juventus,Federico Gatti
+Juventus,Danilo
+Juventus,Alex Sandro
+Juventus,Andrea Cambiaso
+Juventus,Weston McKennie
+Juventus,Manuel Locatelli
+Juventus,Adrien Rabiot
+Juventus,Fabio Miretti
+Juventus,Nicolo Fagioli
+Juventus,Hans Nicolussi Caviglia
+Juventus,Filip Kostic
+Juventus,Samuel Iling-Junior
+Juventus,Federico Chiesa
+Juventus,Kenan Yildiz
+Juventus,Dusan Vlahovic
+Juventus,Moise Kean
+Juventus,Carlos Alcaraz
+Juventus,Mattia Perin
+AC Milan,Mike Maignan
+AC Milan,Davide Calabria
+AC Milan,Matteo Gabbia
+AC Milan,Fikayo Tomori
+AC Milan,Malick Thiaw
+AC Milan,Pierre Kalulu
+AC Milan,Theo Hernandez
+AC Milan,Alessandro Florenzi
+AC Milan,Yacine Adli
+AC Milan,Ruben Loftus-Cheek
+AC Milan,Tijani Reijnders
+AC Milan,Ismael Bennacer
+AC Milan,Christian Pulisic
+AC Milan,Rafael Leao
+AC Milan,Samuel Chukwueze
+AC Milan,Noah Okafor
+AC Milan,Luka Jovic
+AC Milan,Olivier Giroud
+AC Milan,Marco Sportiello
+Napoli,Alex Meret
+Napoli,Giovanni Di Lorenzo
+Napoli,Amir Rrahmani
+Napoli,Leo Ostigard
+Napoli,Mathias Olivera
+Napoli,Pasquale Mazzocchi
+Napoli,Frank Anguissa
+Napoli,Piotr Zielinski
+Napoli,Lobotka
+Napoli,Jens Cajuste
+Napoli,Giacomo Raspadori
+Napoli,Matteo Politano
+Napoli,Khvicha Kvaratskhelia
+Napoli,Cyril Ngonge
+Napoli,Victor Osimhen
+Napoli,Giovanni Simeone
+Napoli,Jesper Lindstrom
+Napoli,Hamed Traore
+Napoli,Natan
+Porto,Diogo Costa
+Porto,Pep
+Porto,David Carmo
+Porto,Ivan Marcano
+Porto,Zaidu Sanusi
+Porto,Joao Mario
+Porto,Alan Varela
+Porto,Nico Gonzalez
+Porto,Stephen Eustaquio
+Porto,Andre Franco
+Porto,Romario Baro
+Porto,Galeno
+Porto,Pepê
+Porto,Evanilson
+Porto,Toni Martinez
+Porto,Fabio Cardoso
+Porto,Francisco Conceicao
+Porto,Danny Loader
+Porto,Samuel Portugal
+Sevilla,Marko Dmitrovic
+Sevilla,Loic Bade
+Sevilla,Sergio Ramos
+Sevilla,Nemanja Gudelj
+Sevilla,Adria Pedrosa
+Sevilla,Jesus Navas
+Sevilla,Fernando
+Sevilla,Ivan Rakitic
+Sevilla,Oliver Torres
+Sevilla,Djibril Sow
+Sevilla,Lucien Agoume
+Sevilla,Boubakary Soumare
+Sevilla,Suso
+Sevilla,Erik Lamela
+Sevilla,Lucas Ocampos
+Sevilla,Youssef En-Nesyri
+Sevilla,Rafa Mir
+Sevilla,Mariano Diaz
+Sevilla,Federico Gattoni
+Sevilla,Alberto Flores
+Benfica,Anatoliy Trubin
+Benfica,Alexander Bah
+Benfica,Antonio Silva
+Benfica,Nicolas Otamendi
+Benfica,Morato
+Benfica,David Jurasek
+Benfica,Fredrik Aursnes
+Benfica,Orkun Kokcu
+Benfica,Joao Neves
+Benfica,Florentino Luis
+Benfica,Rafa Silva
+Benfica,David Neres
+Benfica,Angel Di Maria
+Benfica,Joao Mario
+Benfica,Arthur Cabral
+Benfica,Marcos Leonardo
+Benfica,Goncalo Guedes
+Benfica,Tomas Araujo
+Benfica,Gianluca Prestianni
+Ajax,Diant Ramaj
+Ajax,Devyne Rensch
+Ajax,Jorrel Hato
+Ajax,Josip Sutalo
+Ajax,Gaston Avila
+Ajax,Borna Sosa
+Ajax,Kenneth Taylor
+Ajax,Branco van den Boomen
+Ajax,Benjamin Tahirovic
+Ajax,Silvano Vos
+Ajax,Steven Berghuis
+Ajax,Chuba Akpom
+Ajax,Kristian Hlynsson
+Ajax,Brian Brobbey
+Ajax,Steven Bergwijn
+Ajax,Carlos Forbs
+Ajax,Georges Mikautadze
+Ajax,Gerrit Holtmann
+Ajax,Remko Pasveer
+Feyenoord,Justin Bijlow
+Feyenoord,Lutsharel Geertruida
+Feyenoord,David Hancko
+Feyenoord,Gernot Trauner
+Feyenoord,Thomas Beelen
+Feyenoord,Quilindschy Hartman
+Feyenoord,Bart Nieuwkoop
+Feyenoord,Mats Wieffer
+Feyenoord,Quinten Timber
+Feyenoord,Ramiz Zerrouki
+Feyenoord,Calvin Stengs
+Feyenoord,Igor Paixao
+Feyenoord,Yankuba Minteh
+Feyenoord,Ayase Ueda
+Feyenoord,Santiago Gimenez
+Feyenoord,Luka Ivanusec
+Feyenoord,Givairo Read
+Feyenoord,Antoni Milambo
+Feyenoord,Timon Wellenreuther
+Celtic,Joe Hart
+Celtic,Alistair Johnston
+Celtic,Cameron Carter-Vickers
+Celtic,Liam Scales
+Celtic,Maik Nawrocki
+Celtic,Gustaf Lagerbielke
+Celtic,Greg Taylor
+Celtic,Callum McGregor
+Celtic,Reo Hatate
+Celtic,Matt O'Riley
+Celtic,Paulo Bernardo
+Celtic,Tomoki Iwata
+Celtic,Luis Palma
+Celtic,Daizen Maeda
+Celtic,Kyogo Furuhashi
+Celtic,Adam Idah
+Celtic,James Forrest
+Celtic,Nicolas Kuhn
+Celtic,Yang Hyun-jun
+Celtic,Stephen Welsh
+Rangers,Jack Butland
+Rangers,James Tavernier
+Rangers,Connor Goldson
+Rangers,Ben Davies
+Rangers,John Souttar
+Rangers,Ridvan Yilmaz
+Rangers,Borna Barisic
+Rangers,John Lundstram
+Rangers,Nicolas Raskin
+Rangers,Mohamed Diomande
+Rangers,Todd Cantwell
+Rangers,Ryan Jack
+Rangers,Ross McCausland
+Rangers,Fashion Sakala
+Rangers,Cyriel Dessers
+Rangers,Abdallah Sima
+Rangers,Rabbi Matondo
+Rangers,Tom Lawrence
+Rangers,Kieran Dowell
+Rangers,Robby McCrorie
+Shakhtar Donetsk,Artur Rudko
+Shakhtar Donetsk,Yukhym Konoplia
+Shakhtar Donetsk,Valeriy Bondar
+Shakhtar Donetsk,Mykola Matviyenko
+Shakhtar Donetsk,Yaroslav Rakitskyi
+Shakhtar Donetsk,Novatus Miroshi
+Shakhtar Donetsk,Taras Stepanenko
+Shakhtar Donetsk,Artem Bondarenko
+Shakhtar Donetsk,Heorhiy Sudakov
+Shakhtar Donetsk,Oleksandr Zubkov
+Shakhtar Donetsk,Dmytro Kryskiv
+Shakhtar Donetsk,Egor Nazaryna
+Shakhtar Donetsk,Newerton
+Shakhtar Donetsk,Kevin Kelsy
+Shakhtar Donetsk,Lassina Traore
+Shakhtar Donetsk,Danylo Sikan
+Shakhtar Donetsk,Bogdan V’yunnyk
+Shakhtar Donetsk,Denil Castillo
+Shakhtar Donetsk,Marian Shved
+Galatasaray,Fernando Muslera
+Galatasaray,Leo Dubois
+Galatasaray,Victor Nelsson
+Galatasaray,Abdulkerim Bardakci
+Galatasaray,Kaan Ayhan
+Galatasaray,Derrick Kohn
+Galatasaray,Lucas Torreira
+Galatasaray,Berkan Kutlu
+Galatasaray,Kerem Demirbay
+Galatasaray,Tete
+Galatasaray,Baris Alper Yilmaz
+Galatasaray,Hakim Ziyech
+Galatasaray,Dries Mertens
+Galatasaray,Kerem Akturkoglu
+Galatasaray,Wilfried Zaha
+Galatasaray,Mauro Icardi
+Galatasaray,Carlos Vinicius
+Galatasaray,Cedric Bakambu
+Galatasaray,Emin Bayram
+Red Star Belgrade,Omri Glazer
+Red Star Belgrade,Milan Rodic
+Red Star Belgrade,Srdjan Babic
+Red Star Belgrade,Nasser Djiga
+Red Star Belgrade,Kosta Nedeljkovic
+Red Star Belgrade,Marko Gobeljic
+Red Star Belgrade,Hwang In-beom
+Red Star Belgrade,Guelor Kanga
+Red Star Belgrade,Mirko Ivanic
+Red Star Belgrade,Osman Bukari
+Red Star Belgrade,Peter Olayinka
+Red Star Belgrade,Jovan Mijatovic
+Red Star Belgrade,Vladimir Lucic
+Red Star Belgrade,Nikola Knezevic
+Red Star Belgrade,Cherif Ndiaye
+Red Star Belgrade,Jean-Philippe Krasso
+Red Star Belgrade,Aleksandar Katai
+Red Star Belgrade,Ivan Mijailovic
+Red Star Belgrade,Radovan Pankov
+Salzburg,Alexander Schlager
+Salzburg,Amar Dedic
+Salzburg,Oumar Solet
+Salzburg,Strahinja Pavlovic
+Salzburg,Samson Baidoo
+Salzburg,Lukas Ibertsberger
+Salzburg,Daouda Guindo
+Salzburg,Luka Sucic
+Salzburg,Maurits Kjaergaard
+Salzburg,Lucas Gourna-Douath
+Salzburg,Nicolas Seiwald
+Salzburg,Oscar Gloukh
+Salzburg,Dijon Kameri
+Salzburg,Karim Konate
+Salzburg,Petar Ratkov
+Salzburg,Roko Simic
+Salzburg,Dorgeles Nene
+Salzburg,Moussa Yeo
+Salzburg,Jorginho Soares
+Salzburg,Janis Blaswich
+Lazio,Ivan Provedel
+Lazio,Adam Marusic
+Lazio,Mario Gila
+Lazio,Alessio Romagnoli
+Lazio,Luca Pellegrini
+Lazio,Nicolo Casale
+Lazio,Matteo Guendouzi
+Lazio,Danilo Cataldi
+Lazio,Matias Vecino
+Lazio,Nicolo Rovella
+Lazio,Luis Alberto
+Lazio,Felipe Anderson
+Lazio,Mattia Zaccagni
+Lazio,Gustav Isaksen
+Lazio,Pedro
+Lazio,Ciro Immobile
+Lazio,Taty Castellanos
+Lazio,Diego Gonzalez
+Lazio,Luigi Sepe
+Lazio,Manuel Lazzari
+Young Boys,David von Ballmoos
+Young Boys,Lewin Blum
+Young Boys,Mohamed Ali Camara
+Young Boys,Loris Benito
+Young Boys,Patric Pfeiffer
+Young Boys,Ulisses Garcia
+Young Boys,Castriot Imeri
+Young Boys,Fabian Rieder
+Young Boys,Cheikh Niasse
+Young Boys,Joel Monteiro
+Young Boys,Meschack Elia
+Young Boys,Cedric Itten
+Young Boys,Silvere Ganvoula
+Young Boys,Ebrima Colley
+Young Boys,Filip Ugrinic
+Young Boys,Darian Males
+Young Boys,Sandro Lauper
+Young Boys,Anthony Racioppi
+Club Brugge,Simon Mignolet
+Club Brugge,Maxim De Cuyper
+Club Brugge,Bjorn Meijer
+Club Brugge,Brandon Mechele
+Club Brugge,Jorne Spileers
+Club Brugge,Denis Odoi
+Club Brugge,Hugo Vetlesen
+Club Brugge,Raphael Onyedika
+Club Brugge,Hans Vanaken
+Club Brugge,Michal Skoras
+Club Brugge,Andreas Skov Olsen
+Club Brugge,Ferran Jutgla
+Club Brugge,Igor Thiago
+Club Brugge,Philip Zinckernagel
+Club Brugge,Casper Nielsen
+Club Brugge,Antonio Nusa
+Club Brugge,Romulo Yanez
+Club Brugge,Nordin Jackers
+Club Brugge,Kyriani Sabbe
+Dinamo Zagreb,Ivan Nevistic
+Dinamo Zagreb,Sadegh Moharrami
+Dinamo Zagreb,Kevin Theophile-Catherine
+Dinamo Zagreb,Josip Sutalo
+Dinamo Zagreb,Stefan Ristovski
+Dinamo Zagreb,Borna Sosa
+Dinamo Zagreb,Arijan Ademi
+Dinamo Zagreb,Josip Misic
+Dinamo Zagreb,Luka Ivanusec
+Dinamo Zagreb,Martin Baturina
+Dinamo Zagreb,Gabriel Vidovic
+Dinamo Zagreb,Bruno Petkovic
+Dinamo Zagreb,Mislav Orsic
+Dinamo Zagreb,Dario Spikic
+Dinamo Zagreb,Robert Ljubicic
+Dinamo Zagreb,Fran Brodic
+Dinamo Zagreb,Sandro Kulenovic
+Dinamo Zagreb,Mauro Perkovic
+Dinamo Zagreb,Daniel Zagorac
+Olympiacos,Kostas Tzolakis
+Olympiacos,Rodinei
+Olympiacos,Panagiotis Retsos
+Olympiacos,Oleg Reabciuk
+Olympiacos,Quini
+Olympiacos,Francisco Ortega
+Olympiacos,Sotiris Alexandropoulos
+Olympiacos,Vicente Iborra
+Olympiacos,Mady Camara
+Olympiacos,Kostas Fortounis
+Olympiacos,Pep Biel
+Olympiacos,Giorgos Masouras
+Olympiacos,Daniel Podence
+Olympiacos,Youssef El Arabi
+Olympiacos,Ayoub El Kaabi
+Olympiacos,Stevan Jovetic
+Olympiacos,Nelson Abbey
+Olympiacos,Andreas Ndoj
+Olympiacos,Julian Biancone
+FC Copenhagen,Kamil Grabara
+FC Copenhagen,Peter Ankersen
+FC Copenhagen,Denis Vavro
+FC Copenhagen,Kevin Diks
+FC Copenhagen,Birger Meling
+FC Copenhagen,Nicolai Boilesen
+FC Copenhagen,Lukas Lerager
+FC Copenhagen,Rasmus Falk
+FC Copenhagen,Diogo Goncalves
+FC Copenhagen,Mohamed Elyounoussi
+FC Copenhagen,Jordan Larsson
+FCopenhagen,Andreas Cornelius
+FC Copenhagen,Roony Bardghji
+FC Copenhagen,Elias Achouri
+FC Copenhagen,Orri Oskarsson
+FC Copenhagen,Christian Sorensen
+FC Copenhagen,Victor Froholdt
+FC Copenhagen,Theo Sander
+FC Copenhagen,William Clem
+Lens,Brice Samba
+Lens,Jonathan Gradit
+Lens,Kevin Danso
+Lens,Abdukodir Khusanov
+Lens,Facu Medina
+Lens,Deiver Machado
+Lens,Florian Sotoca
+Lens,Nampalys Mendy
+Lens,Andy Diouf
+Lens,Adrien Thomasson
+Lens,David Pereira Da Costa
+Lens,Rubens Aguilar
+Lens,Angelo Fulgini
+Lens,Oscar Cortes
+Lens,Wesley Said
+Lens,Elye Wahi
+Lens,Jhoanner Chavez
+Lens,Neil El Aynaoui
+Lens,Morgan Guilavogui
+Lens,Wuilker Farinez
+PSV Eindhoven,Walter Benitez
+PSV Eindhoven,Jordan Teze
+PSV Eindhoven,Andre Ramalho
+PSV Eindhoven,Olivier Boscagli
+PSV Eindhoven,Sergino Dest
+PSV Eindhoven,Mauro Junior
+PSV Eindhoven,Armando Obispo
+PSV Eindhoven,Joey Veerman
+PSV Eindhoven,Jerdy Schouten
+PSV Eindhoven,Malik Tillman
+PSV Eindhoven,Guus Til
+PSV Eindhoven,Ismael Saibari
+PSV Eindhoven,Johan Bakayoko
+PSV Eindhoven,Hirving Lozano
+PSV Eindhoven,Noa Lang
+PSV Eindhoven,Luuk de Jong
+PSV Eindhoven,Ricardo Pepi
+PSV Eindhoven,Patrick van Aanholt
+PSV Eindhoven,Ryan Flamingo
+Real Sociedad,Alex Remiro
+Real Sociedad,Hamar Traore
+Real Sociedad,Robin Le Normand
+Real Sociedad,Igor Zubeldia
+Real Sociedad,Javi Galan
+Real Sociedad,Kieran Tierney
+Real Sociedad,Martin Zubimendi
+Real Sociedad,Mikel Merino
+Real Sociedad,Brais Mendez
+Real Sociedad,Takefusa Kubo
+Real Sociedad,Sheraldo Becker
+Real Sociedad,Andre Silva
+Real Sociedad,Umar Sadiq
+Real Sociedad,Arsen Zakharyan
+Real Sociedad,Carlos Fernandez
+Real Sociedad,Jon Pacheco
+Real Sociedad,Aritz Elustondo
+Real Sociedad,Benat Turrientes
+Real Sociedad,Alvaro Odriozola
