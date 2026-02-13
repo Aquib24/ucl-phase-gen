@@ -1,8 +1,10 @@
 // ============================================
-// uiRenderer.js - COMPLETE with Search
+// uiRenderer.js - COMPLETE FIXED VERSION
+// With working match editor and save button
 // ============================================
 
 const UIRenderer = {
+    // ============ MASTER RENDER ============
     renderAll() {
         this.renderTeamCloud();
         this.renderTeamCount();
@@ -16,7 +18,7 @@ const UIRenderer = {
         this.renderSearchResults();
     },
 
-    // Team Management
+    // ============ TEAM MANAGEMENT ============
     renderTeamCloud() {
         const container = document.getElementById('teamCloudContainer');
         if (!container) return;
@@ -45,7 +47,7 @@ const UIRenderer = {
         }
     },
 
-    // Matchday View
+    // ============ MATCHDAY VIEW ============
     renderMatchdayTabs() {
         const container = document.getElementById('matchdayTabBar');
         if (!container) return;
@@ -90,22 +92,47 @@ const UIRenderer = {
             
             if (match.played) {
                 return `
-                    <div class="match-item played">
+                    <div class="match-item played" data-match-id="${match.id}">
                         <span><strong>${home.name}</strong> ${match.score.home}-${match.score.away} <strong>${away.name}</strong></span>
+                        <span style="display:flex; gap:0.5rem;">
+                            <span class="badge">⚽ ${match.events.length}</span>
+                            <button class="btn-sm edit-match-btn" data-match-id="${match.id}">✏️</button>
+                        </span>
                     </div>
                 `;
             } else {
                 return `
-                    <div class="match-item">
+                    <div class="match-item" data-match-id="${match.id}">
                         <span>${home.name} vs ${away.name}</span>
-                        <span style="color:#6b8cae;">⏳</span>
+                        <span style="display:flex; gap:0.5rem;">
+                            <span style="color:#6b8cae;">⏳</span>
+                            <button class="btn-sm edit-match-btn" data-match-id="${match.id}">✏️</button>
+                        </span>
                     </div>
                 `;
             }
         }).join('');
+        
+        // Add click handlers
+        container.querySelectorAll('.edit-match-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const matchId = parseInt(btn.dataset.matchId);
+                this.renderMatchEditor(matchId);
+            });
+        });
+        
+        container.querySelectorAll('.match-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('edit-match-btn')) {
+                    const matchId = parseInt(item.dataset.matchId);
+                    this.renderMatchEditor(matchId);
+                }
+            });
+        });
     },
 
-    // League Table
+    // ============ LEAGUE TABLE ============
     renderLeagueTable() {
         const container = document.getElementById('leagueTableContainer');
         if (!container) return;
@@ -134,7 +161,7 @@ const UIRenderer = {
         container.innerHTML = html;
     },
 
-    // Leaderboards
+    // ============ LEADERBOARDS ============
     renderLeaderboards() {
         // Top Scorers
         const scorers = [...DataStore.players].sort((a,b) => b.goals - a.goals).slice(0,10);
@@ -167,6 +194,7 @@ const UIRenderer = {
         }
     },
 
+    // ============ STATUS ============
     renderStatusBadge() {
         const badge = document.getElementById('globalStateBadge');
         if (badge) badge.innerHTML = '🟢 Auto-saved';
@@ -176,7 +204,7 @@ const UIRenderer = {
         const status = document.getElementById('dataPipelineStatus');
         if (status) {
             status.innerHTML = isError ? `❌ ${message}` : `✅ ${message}`;
-            status.style.color = isError ? '#b33a3a' : '#2a6e9b';
+            status.style.color = isError ? '#dc2626' : '#059669';
         }
     },
 
@@ -184,12 +212,11 @@ const UIRenderer = {
         const feedback = document.getElementById('drawFeedback');
         if (feedback) {
             feedback.innerHTML = isValid ? `✓ ${message}` : `⚠️ ${message}`;
-            feedback.style.color = isValid ? '#0057a3' : '#b33a3a';
+            feedback.style.color = isValid ? '#059669' : '#dc2626';
         }
     },
 
-    // ============ SEARCH FUNCTIONALITY ============
-    
+    // ============ SEARCH ============
     populateTeamFilter() {
         const select = document.getElementById('teamSearchFilter');
         if (!select) return;
@@ -255,7 +282,7 @@ const UIRenderer = {
             const away = DataStore.getTeamById(match.awayTeam);
             if (!home || !away) return '';
             
-            const status = match.played ? '✅' : '⏳';
+            const statusIcon = match.played ? '✅' : '⏳';
             const score = match.played ? `${match.score.home}-${match.score.away}` : 'vs';
             
             return `
@@ -266,8 +293,8 @@ const UIRenderer = {
                             <strong>${home.name}</strong> ${score} <strong>${away.name}</strong>
                         </span>
                         <span>
-                            ${status}
-                            <button class="btn btn-sm edit-search-match" data-match-id="${match.id}" style="margin-left:0.5rem;">✏️</button>
+                            ${statusIcon}
+                            <button class="btn-sm edit-match-btn" data-match-id="${match.id}" style="margin-left:0.5rem;">✏️</button>
                         </span>
                     </div>
                 </div>
@@ -275,7 +302,7 @@ const UIRenderer = {
         }).join('');
         
         // Add click handlers
-        container.querySelectorAll('.edit-search-match').forEach(btn => {
+        container.querySelectorAll('.edit-match-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const matchId = parseInt(btn.dataset.matchId);
@@ -285,7 +312,7 @@ const UIRenderer = {
         
         container.querySelectorAll('.match-item').forEach(item => {
             item.addEventListener('click', (e) => {
-                if (!e.target.classList.contains('edit-search-match')) {
+                if (!e.target.classList.contains('edit-match-btn')) {
                     const matchId = parseInt(item.dataset.matchId);
                     this.renderMatchEditor(matchId);
                 }
@@ -293,7 +320,7 @@ const UIRenderer = {
         });
     },
 
-    // Match Editor
+    // ============ MATCH EDITOR - FIXED VERSION ============
     renderMatchEditor(matchId) {
         const match = DataStore.getMatchById(matchId);
         if (!match) return;
@@ -301,11 +328,31 @@ const UIRenderer = {
         const home = DataStore.getTeamById(match.homeTeam);
         const away = DataStore.getTeamById(match.awayTeam);
         
-        document.getElementById('matchHomeName').textContent = home?.name || '';
-        document.getElementById('matchAwayName').textContent = away?.name || '';
-        document.getElementById('homeScore').value = match.score.home;
-        document.getElementById('awayScore').value = match.score.away;
+        // Show editor panel
+        const editorPanel = document.getElementById('matchEditPanel');
+        if (editorPanel) {
+            editorPanel.style.display = 'block';
+            editorPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
         
+        // Update header
+        const headerEl = document.querySelector('#matchEditPanel h3');
+        if (headerEl) {
+            headerEl.innerHTML = `⚽ ${home?.name} vs ${away?.name}`;
+        }
+        
+        // Update team names and scores
+        const homeNameEl = document.getElementById('matchHomeName');
+        const awayNameEl = document.getElementById('matchAwayName');
+        const homeScoreEl = document.getElementById('homeScore');
+        const awayScoreEl = document.getElementById('awayScore');
+        
+        if (homeNameEl) homeNameEl.textContent = home?.name || '';
+        if (awayNameEl) awayNameEl.textContent = away?.name || '';
+        if (homeScoreEl) homeScoreEl.value = match.score.home;
+        if (awayScoreEl) awayScoreEl.value = match.score.away;
+        
+        // Player dropdowns
         const players = DataStore.players.filter(p => 
             p.teamId === match.homeTeam || p.teamId === match.awayTeam
         );
@@ -315,19 +362,68 @@ const UIRenderer = {
             return `<option value="${p.id}">${p.name} (${team?.name})</option>`;
         }).join('');
         
-        document.getElementById('scorerSelect').innerHTML = playerOptions;
-        document.getElementById('assisterSelect').innerHTML = '<option value="">— no assist —</option>' + playerOptions;
-        document.getElementById('motmSelect').innerHTML = '<option value="">— select MOTM —</option>' + playerOptions;
+        const scorerSelect = document.getElementById('scorerSelect');
+        const assisterSelect = document.getElementById('assisterSelect');
+        const motmSelect = document.getElementById('motmSelect');
         
-        // Show events
-        const eventsList = document.getElementById('eventsList');
-        eventsList.innerHTML = match.events.map(e => {
-            const scorer = DataStore.getPlayerById(e.scorerId);
-            return `<div>⚽ ${e.minute}' ${scorer?.name}</div>`;
+        if (scorerSelect) scorerSelect.innerHTML = '<option value="">Select scorer...</option>' + playerOptions;
+        if (assisterSelect) assisterSelect.innerHTML = '<option value="">— no assist —</option>' + playerOptions;
+        if (motmSelect) motmSelect.innerHTML = '<option value="">— select MOTM —</option>' + playerOptions;
+        
+        // Render events
+        this.renderMatchEvents(match);
+        
+        // Store match ID in save button
+        const saveBtn = document.getElementById('saveMatchBtn');
+        if (saveBtn) saveBtn.dataset.matchId = matchId;
+        
+        // Clear any errors
+        const errorEl = document.getElementById('editorError');
+        if (errorEl) errorEl.style.display = 'none';
+    },
+
+    // Render events for current match - FIXED VERSION
+    renderMatchEvents(match) {
+        const container = document.getElementById('eventsList');
+        if (!container) return;
+        
+        if (match.events.length === 0) {
+            container.innerHTML = '<div style="color: #64748b; font-style: italic; padding: 1rem; text-align: center;">No goals added yet. Add goals below!</div>';
+            return;
+        }
+        
+        container.innerHTML = match.events.map((event, index) => {
+            const scorer = DataStore.getPlayerById(event.scorerId);
+            const assister = event.assisterId ? DataStore.getPlayerById(event.assisterId) : null;
+            
+            return `
+                <div class="event-item" data-event-index="${index}">
+                    <div>
+                        <span class="minute">${event.minute}'</span>
+                        <span class="scorer">⚽ ${scorer?.name || 'Unknown'}</span>
+                        ${assister ? `<span class="assist">🅰️ ${assister.name}</span>` : ''}
+                    </div>
+                    <button class="remove-event-btn" data-event-index="${index}" title="Remove goal">✕</button>
+                </div>
+            `;
         }).join('');
         
-        document.getElementById('matchEditPanel').style.display = 'block';
-        document.getElementById('saveMatchBtn').dataset.matchId = matchId;
+        // Add remove event handlers
+        container.querySelectorAll('.remove-event-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const index = parseInt(btn.dataset.eventIndex);
+                const saveBtn = document.getElementById('saveMatchBtn');
+                const matchId = saveBtn ? parseInt(saveBtn.dataset.matchId) : null;
+                const match = DataStore.getMatchById(matchId);
+                
+                if (match && !match.played) {
+                    match.events.splice(index, 1);
+                    this.renderMatchEvents(match);
+                    Storage.save();
+                }
+            });
+        });
     }
 };
 

@@ -21,13 +21,10 @@
         <!-- Main Dashboard Grid -->
         <div class="dashboard-grid" id="dashboardGrid">
             <!-- CARD 1: Team Manager -->
-            <div class="card collapsible" data-card="teamManager">
-                <div class="card-header clickable-header">
+            <div class="card">
+                <div class="card-header">
                     <h2><span>📋</span> Team Manager</h2>
-                    <div class="card-controls">
-                        <span id="teamCountBadge">0</span>
-                        <button class="collapse-btn">−</button>
-                    </div>
+                    <span id="teamCountBadge">0</span>
                 </div>
                 <div class="card-content">
                     <div class="flex-row">
@@ -44,13 +41,10 @@
             </div>
 
             <!-- CARD 2: Draw Engine -->
-            <div class="card collapsible" data-card="drawEngine">
-                <div class="card-header clickable-header">
+            <div class="card">
+                <div class="card-header">
                     <h2><span>🎯</span> Draw & Schedule</h2>
-                    <div class="card-controls">
-                        <span id="matchCountBadge">0</span>
-                        <button class="collapse-btn">−</button>
-                    </div>
+                    <span id="matchCountBadge">0</span>
                 </div>
                 <div class="card-content">
                     <div class="flex-row">
@@ -65,13 +59,10 @@
             </div>
 
             <!-- CARD 3: Matchday Viewer -->
-            <div class="card grid-span-2 collapsible" data-card="matchdayViewer">
-                <div class="card-header clickable-header">
+            <div class="card grid-span-2">
+                <div class="card-header">
                     <h2><span>📅</span> Matchday viewer</h2>
-                    <div class="card-controls">
-                        <span id="currentMDLabel">MD1</span>
-                        <button class="collapse-btn">−</button>
-                    </div>
+                    <span id="currentMDLabel">MD1</span>
                 </div>
                 <div class="card-content">
                     <div id="matchdayMatchList" class="match-list"></div>
@@ -79,10 +70,9 @@
             </div>
 
             <!-- CARD 4: Match Editor with SEARCH -->
-            <div class="card collapsible" data-card="matchEditor">
-                <div class="card-header clickable-header">
+            <div class="card">
+                <div class="card-header">
                     <h2><span>⚙️</span> Match Search & Editor</h2>
-                    <button class="collapse-btn">−</button>
                 </div>
                 <div class="card-content">
                     <!-- SEARCH SECTION -->
@@ -131,48 +121,59 @@
                         <div id="searchResultsList" class="results-list"></div>
                     </div>
 
-                    <!-- MATCH EDITOR -->
+                    <!-- MATCH EDITOR - FIXED VERSION -->
                     <div id="matchEditPanel" class="editor-panel" style="display: none;">
-                        <hr>
-                        <h3>Edit Match</h3>
+                        <h3>⚽ Edit Match</h3>
+                        
+                        <!-- Score Section -->
                         <div class="form-row">
                             <span id="matchHomeName" class="team-badge"></span>
                             <input type="number" id="homeScore" min="0" class="small-input" value="0">
-                            <span>:</span>
+                            <span style="font-weight:700; color:var(--primary-600);">:</span>
                             <input type="number" id="awayScore" min="0" class="small-input" value="0">
                             <span id="matchAwayName" class="team-badge"></span>
                         </div>
                         
-                        <div class="goal-section">
-                            <strong>⚽ Add goal</strong>
-                        </div>
-                        <select id="scorerSelect" class="full-width"></select>
+                        <hr>
+                        
+                        <!-- Add Goal Section -->
+                        <div class="goal-section">⚽ Add Goal</div>
+                        
+                        <select id="scorerSelect" class="full-width">
+                            <option value="">Select scorer...</option>
+                        </select>
+                        
                         <select id="assisterSelect" class="full-width">
                             <option value="">— no assist —</option>
                         </select>
-                        <div class="form-row">
-                            <input type="number" id="minuteInput" placeholder="min" min="1" max="120" style="width:80px;">
-                            <button class="btn btn-sm" id="addGoalEventBtn">➕ Add</button>
+                        
+                        <div class="minute-row">
+                            <input type="number" id="minuteInput" placeholder="min" min="1" max="120" value="45">
+                            <button class="btn btn-sm" id="addGoalEventBtn">➕ Add Goal</button>
                         </div>
                         
+                        <!-- Events List (scrollable) -->
                         <div id="eventsList" class="events-list"></div>
                         
-                        <div class="motm-section">
-                            <strong>🏆 MOTM</strong>
-                        </div>
-                        <select id="motmSelect" class="full-width"></select>
+                        <hr>
                         
-                        <button class="btn btn-primary" id="saveMatchBtn">💾 Save Match</button>
+                        <!-- MOTM Section -->
+                        <div class="motm-section">🏆 Man of the Match</div>
+                        <select id="motmSelect" class="full-width">
+                            <option value="">— select MOTM —</option>
+                        </select>
+                        
+                        <!-- Save Button - Always Visible -->
+                        <button class="btn btn-primary" id="saveMatchBtn">💾 SAVE MATCH RESULT</button>
                         <div id="editorError" class="error-msg" style="display:none;"></div>
                     </div>
                 </div>
             </div>
 
             <!-- CARD 5: League Table -->
-            <div class="card collapsible" data-card="leagueTable">
-                <div class="card-header clickable-header">
+            <div class="card">
+                <div class="card-header">
                     <h2><span>🏆</span> League table</h2>
-                    <button class="collapse-btn">−</button>
                 </div>
                 <div class="card-content">
                     <div class="table-responsive" id="leagueTableContainer"></div>
@@ -180,10 +181,9 @@
             </div>
 
             <!-- CARD 6: Top scorers -->
-            <div class="card collapsible" data-card="topScorers">
-                <div class="card-header clickable-header">
+            <div class="card">
+                <div class="card-header">
                     <h2><span>⚽</span> Top scorers</h2>
-                    <button class="collapse-btn">−</button>
                 </div>
                 <div class="card-content">
                     <div id="scorersList" class="leaderboard"></div>
@@ -191,10 +191,9 @@
             </div>
 
             <!-- CARD 7: Top assists -->
-            <div class="card collapsible" data-card="topAssists">
-                <div class="card-header clickable-header">
+            <div class="card">
+                <div class="card-header">
                     <h2><span>🅰️</span> Top assists</h2>
-                    <button class="collapse-btn">−</button>
                 </div>
                 <div class="card-content">
                     <div id="assistsList" class="leaderboard"></div>
@@ -202,10 +201,9 @@
             </div>
 
             <!-- CARD 8: Most MOTM -->
-            <div class="card collapsible" data-card="topMotm">
-                <div class="card-header clickable-header">
+            <div class="card">
+                <div class="card-header">
                     <h2><span>⭐</span> Most MOTM</h2>
-                    <button class="collapse-btn">−</button>
                 </div>
                 <div class="card-content">
                     <div id="motmList" class="leaderboard"></div>
@@ -213,10 +211,9 @@
             </div>
 
             <!-- CARD 9: Export/Import -->
-            <div class="card grid-span-4 collapsible" data-card="exportImport">
-                <div class="card-header clickable-header">
+            <div class="card grid-span-4">
+                <div class="card-header">
                     <h2><span>💾</span> Storage</h2>
-                    <button class="collapse-btn">−</button>
                 </div>
                 <div class="card-content">
                     <div class="status-banner">
@@ -247,70 +244,5 @@
     <script src="statsEngine.js"></script>
     <script src="uiRenderer.js"></script>
     <script src="app.js"></script>
-    
-    <!-- Collapsible Cards Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize collapsible cards
-            const cards = document.querySelectorAll('.collapsible');
-            
-            cards.forEach(card => {
-                const header = card.querySelector('.card-header');
-                const content = card.querySelector('.card-content');
-                const collapseBtn = card.querySelector('.collapse-btn');
-                
-                if (header && content && collapseBtn) {
-                    header.addEventListener('click', (e) => {
-                        // Don't collapse if clicking on buttons or selects inside header
-                        if (e.target.tagName === 'BUTTON' || 
-                            e.target.tagName === 'SELECT' || 
-                            e.target.tagName === 'INPUT' ||
-                            e.target.closest('button')) {
-                            return;
-                        }
-                        
-                        content.classList.toggle('collapsed');
-                        collapseBtn.textContent = content.classList.contains('collapsed') ? '+' : '−';
-                        
-                        // If expanded, remove any max-width constraints
-                        if (!content.classList.contains('collapsed')) {
-                            card.style.gridColumn = 'span var(--grid-span, 1)';
-                        }
-                    });
-                    
-                    // Collapse button click
-                    collapseBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        content.classList.toggle('collapsed');
-                        collapseBtn.textContent = content.classList.contains('collapsed') ? '+' : '−';
-                    });
-                }
-            });
-            
-            // Expand All button
-            document.getElementById('expandAllBtn')?.addEventListener('click', () => {
-                cards.forEach(card => {
-                    const content = card.querySelector('.card-content');
-                    const collapseBtn = card.querySelector('.collapse-btn');
-                    if (content && collapseBtn) {
-                        content.classList.remove('collapsed');
-                        collapseBtn.textContent = '−';
-                    }
-                });
-            });
-            
-            // Collapse All button
-            document.getElementById('collapseAllBtn')?.addEventListener('click', () => {
-                cards.forEach(card => {
-                    const content = card.querySelector('.card-content');
-                    const collapseBtn = card.querySelector('.collapse-btn');
-                    if (content && collapseBtn) {
-                        content.classList.add('collapsed');
-                        collapseBtn.textContent = '+';
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>

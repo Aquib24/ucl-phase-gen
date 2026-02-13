@@ -1063,3 +1063,238 @@ hr {
 
 .hidden { display: none; }
 .visible { display: block; }
+
+
+/* ===== FIXED MATCH EDITOR - NO SCROLLING NEEDED ===== */
+#matchEditPanel {
+    position: relative;
+    max-height: none !important;
+    overflow: visible !important;
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-5);
+    margin-top: var(--spacing-4);
+    border: 2px solid var(--primary-200);
+    box-shadow: var(--shadow-lg);
+}
+
+#matchEditPanel h3 {
+    font-size: 1.3rem;
+    margin-bottom: var(--spacing-4);
+    color: var(--primary-700);
+    border-bottom: 2px solid var(--primary-100);
+    padding-bottom: var(--spacing-2);
+}
+
+/* Fixed height for events list with internal scroll */
+#eventsList {
+    max-height: 120px;
+    overflow-y: auto;
+    margin: var(--spacing-3) 0;
+    padding: var(--spacing-2);
+    background: var(--neutral-100);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--neutral-300);
+}
+
+/* Make sure save button is always visible */
+#saveMatchBtn {
+    position: sticky;
+    bottom: 0;
+    background: var(--gradient-primary);
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: var(--spacing-3) var(--spacing-4);
+    margin-top: var(--spacing-4);
+    border: none;
+    border-radius: var(--radius-full);
+    width: 100%;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
+}
+
+#saveMatchBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2xl);
+}
+
+/* Fix for form rows */
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+/* Make team badges bigger in editor */
+#matchHomeName, #matchAwayName {
+    font-size: 1rem;
+    padding: var(--spacing-2) var(--spacing-4);
+}
+
+/* Score inputs styling */
+#homeScore, #awayScore {
+    font-size: 1.2rem;
+    font-weight: 700;
+    width: 70px;
+    text-align: center;
+    border: 2px solid var(--primary-300);
+}
+
+/* Goal section headers */
+.goal-section, .motm-section {
+    margin: var(--spacing-4) 0 var(--spacing-2);
+    font-weight: 700;
+    color: var(--neutral-800);
+}
+
+/* Dropdowns styling */
+#scorerSelect, #assisterSelect, #motmSelect {
+    margin-bottom: var(--spacing-2);
+    padding: var(--spacing-3);
+    border: 2px solid var(--neutral-300);
+    border-radius: var(--radius-full);
+    width: 100%;
+}
+
+/* Minute input and add button row */
+.minute-row {
+    display: flex;
+    gap: var(--spacing-2);
+    margin: var(--spacing-2) 0;
+}
+
+#minuteInput {
+    flex: 0 0 80px;
+    padding: var(--spacing-2);
+    border: 2px solid var(--neutral-300);
+    border-radius: var(--radius-full);
+}
+
+#addGoalEventBtn {
+    flex: 1;
+    background: var(--success);
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+#addGoalEventBtn:hover {
+    background: var(--success);
+    filter: brightness(1.1);
+}
+
+/* Event items styling */
+.event-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-2) var(--spacing-3);
+    background: white;
+    border: 1px solid var(--neutral-300);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-1);
+    font-weight: 500;
+}
+
+.event-item .minute {
+    color: var(--primary-600);
+    font-weight: 700;
+    margin-right: var(--spacing-2);
+}
+
+.event-item .scorer {
+    font-weight: 600;
+}
+
+.event-item .assist {
+    color: var(--success);
+    font-size: 0.85rem;
+    margin-left: var(--spacing-2);
+}
+
+.remove-event-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: var(--error-light);
+    color: var(--error);
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-event-btn:hover {
+    background: var(--error);
+    color: white;
+}
+
+/* ===== EXPANDED CARDS - NO SCROLLING ===== */
+.card-content {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Make all cards expanded by default */
+.card .card-content {
+    max-height: none !important;
+    opacity: 1 !important;
+}
+
+/* Remove collapse functionality if you don't want it */
+.collapse-btn {
+    display: none !important;
+}
+
+/* Ensure all content is visible */
+.card {
+    overflow: visible !important;
+}
+
+.dashboard-grid {
+    overflow: visible !important;
+}
+
+/* Fix for search results */
+#searchResultsList {
+    max-height: 200px;
+    overflow-y: auto;
+    margin: var(--spacing-3) 0;
+}
+
+/* Fix for match lists */
+.match-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* ===== RESPONSIVE FIXES ===== */
+@media (max-width: 768px) {
+    #matchEditPanel {
+        padding: var(--spacing-3);
+    }
+    
+    .form-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    #homeScore, #awayScore {
+        width: 100%;
+    }
+    
+    .minute-row {
+        flex-direction: column;
+    }
+    
+    #minuteInput {
+        width: 100%;
+    }
+}
