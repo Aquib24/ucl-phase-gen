@@ -3,246 +3,714 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UCL · League Phase Manager</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Champions League · full stats (all players visible)</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        body { background: #f4f7fc; padding: 30px 24px; color: #1e293b; }
+        .container { max-width: 1800px; margin: 0 auto; }
+
+        /* top 5 leaders cards */
+        .stat-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
+        .stat-card { background: white; border-radius: 28px; padding: 20px 24px; box-shadow: 0 10px 25px -8px rgba(0,0,0,0.06); border: 1px solid #e9edf4; flex: 1 1 160px; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -8px rgba(0,0,0,0.1); }
+        .stat-card h4 { color: #546e7a; font-weight: 500; font-size: 0.9rem; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase; }
+        .stat-lead { font-size: 2rem; font-weight: 700; color: #0f2b45; }
+        .stat-detail { color: #6f7f94; font-size: 0.9rem; }
+
+        .stage-tabs { display: flex; flex-wrap: wrap; background: white; padding: 10px 20px; border-radius: 60px; margin: 30px 0 28px; box-shadow: 0 6px 14px #dfe6ef; border: 1px solid #dde3ec; align-items: center; gap: 5px; }
+        .stage-tab { padding: 10px 26px; font-weight: 600; color: #4b5b6e; border-radius: 40px; cursor: pointer; transition: 0.15s; background: transparent; white-space: nowrap; }
+        .stage-tab.active { background: #1e3a5f; color: white; box-shadow: 0 6px 14px #a5bbd9; }
+
+        .matchday-strip { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0 24px; }
+        .md-btn { background: white; border: 1px solid #ccd7e6; color: #1f3a5f; font-weight: 600; padding: 10px 28px; border-radius: 40px; cursor: pointer; transition: all 0.2s; }
+        .md-btn:hover { background: #e8f0fe; }
+        .md-btn.active { background: #1e3a5f; border-color: #1e3a5f; color: white; }
+
+        .matches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .match-tile { background: white; border-radius: 32px; padding: 22px 20px; box-shadow: 0 8px 22px #d4deeb; border: 1px solid #dee6f0; transition: transform 0.2s; }
+        .match-tile:hover { transform: translateY(-3px); box-shadow: 0 12px 28px #c0cee0; }
+        .match-teams { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .team-badge { background: #f0f5fd; padding: 8px 16px; border-radius: 40px; font-weight: 600; color: #142b44; max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 1px solid #d2def0; cursor: pointer; transition: background 0.2s; }
+        .team-badge:hover { background: #e0eaf9; }
+        .vs-score { font-size: 2rem; font-weight: 800; color: #1d3d6d; background: #f4f9ff; padding: 6px 14px; border-radius: 60px; min-width: 80px; text-align: center; }
+        .edit-btn { background: #1e3a5f; border: none; color: white; font-weight: 600; padding: 14px 0; width: 100%; border-radius: 50px; cursor: pointer; border: 1px solid #2e4a73; transition: background 0.2s; }
+        .edit-btn:hover { background: #2a4a78; }
+
+        .bracket-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; background: white; border-radius: 50px; padding: 30px; margin-top: 20px; }
+        .bracket-col { background: #f8fcff; border-radius: 40px; padding: 20px; min-width: 260px; border: 1px solid #d4e1f2; }
+        .bracket-match { background: white; border-radius: 30px; padding: 15px; margin-bottom: 15px; border: 1px solid #cddef5; display: flex; gap: 8px; align-items: center; }
+        .bracket-match select { padding: 6px; border-radius: 30px; border: 1px solid #acc4e0; width: 100%; }
+
+        .filter-bar { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; background: white; padding: 16px 28px; border-radius: 60px; align-items: center; box-shadow: 0 4px 12px #e0e8f2; }
+        .filter-bar input, .filter-bar select { padding: 12px 20px; border-radius: 40px; border: 1px solid #cbd9ed; background: #f4f9ff; font-size: 0.95rem; min-width: 200px; }
+        .filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: #1e3a5f; }
+
+        /* FULL STAT TABLE - IMPROVED VISIBILITY */
+        .stats-table-wrapper { 
+            background: white; 
+            border-radius: 40px; 
+            padding: 25px; 
+            margin-top: 30px; 
+            max-height: 600px; 
+            overflow-y: auto; 
+            box-shadow: 0 15px 35px rgba(0,20,50,0.15);
+            border: 1px solid #d9e2f0;
+        }
+        .stats-table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0 8px;
+        }
+        .stats-table th { 
+            background: #eef3fc; 
+            padding: 16px 14px; 
+            text-align: left; 
+            position: sticky; 
+            top: 0; 
+            z-index: 10;
+            font-weight: 600;
+            color: #1e3a5f;
+            border-bottom: 2px solid #cbd6e8;
+        }
+        .stats-table td { 
+            padding: 14px; 
+            background: #fafcff;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .stats-table tr:hover td { 
+            background: #f0f7ff; 
+            transform: scale(1.01);
+            transition: all 0.2s;
+        }
+
+        .form-badge { display: inline-block; width: 32px; height: 32px; line-height: 32px; border-radius: 50%; background: #d4e2fc; color: #1d3557; font-weight: 700; margin: 0 3px; text-align: center; }
+        .form-badge.l { background: #fcc5c5; color: #9e2e2e; }
+        .table-wrap { background: white; border-radius: 40px; padding: 18px 10px; box-shadow: 0 12px 30px #ccd9e9; border: 1px solid #dde5f0; overflow-x: auto; }
+        .section-title { font-size: 1.8rem; font-weight: 700; color: #0b263f; margin: 40px 0 20px; }
+
+        /* full stats tabs */
+        .stats-subtabs { 
+            display: flex; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+            background: white; 
+            padding: 12px 20px; 
+            border-radius: 60px; 
+            margin: 20px 0; 
+            border: 1px solid #dee6f0;
+        }
+        .stat-subtab { 
+            padding: 10px 24px; 
+            border-radius: 40px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            color: #4b5b6e;
+            transition: all 0.2s;
+        }
+        .stat-subtab:hover { background: #eef3fc; }
+        .stat-subtab.active { 
+            background: #1e3a5f; 
+            color: white; 
+            box-shadow: 0 4px 12px #a5bbd9;
+        }
+
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(33,55,84,0.3); backdrop-filter: blur(3px); align-items: center; justify-content: center; z-index: 1000; }
+        .modal-panel { background: white; max-width: 900px; width: 95%; border-radius: 48px; padding: 30px; max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        .modal-header { font-size: 2rem; font-weight: 700; color: #0b1d33; margin-bottom: 25px; display: flex; justify-content: space-between; }
+        .close-btn { font-size: 2.5rem; cursor: pointer; color: #687e9e; transition: color 0.2s; }
+        .close-btn:hover { color: #1e3a5f; }
+        .modal-section { background: #f8fcff; border-radius: 40px; padding: 22px 20px; margin-bottom: 28px; border: 1px solid #dae5f2; }
+        .event-row { display: flex; gap: 15px; flex-wrap: wrap; background: #ffffff; border-radius: 60px; padding: 12px 20px; margin-bottom: 14px; border: 1px solid #d0deef; }
+        .event-row select { background: white; border: 1px solid #bfd2ea; border-radius: 40px; padding: 12px 20px; flex: 1 1 140px; }
+        .checkbox-label { display: flex; align-items: center; gap: 8px; color: #2f4b74; }
+        .add-button { background: #dbe6f5; border: none; border-radius: 50px; padding: 12px 28px; font-weight: 600; color: #113155; cursor: pointer; border: 1px solid #b7ceec; transition: background 0.2s; }
+        .add-button:hover { background: #c5d3e8; }
+        .save-button { background: #1e3a5f; color: white; border: none; width: 100%; padding: 20px 0; font-size: 1.5rem; font-weight: 700; border-radius: 80px; cursor: pointer; margin-top: 20px; transition: background 0.2s; }
+        .save-button:hover { background: #2a4a78; }
+        .reset-btn { background: #dc3545; color: white; border: none; padding: 12px 32px; border-radius: 60px; font-weight: 600; cursor: pointer; margin-left: 20px; transition: background 0.2s; }
+        .reset-btn:hover { background: #c82333; }
+
+        @media (max-width: 768px) {
+            .stage-tabs { overflow-x: auto; flex-wrap: nowrap; }
+            .stage-tab { white-space: nowrap; }
+            .filter-bar input, .filter-bar select { width: 100%; }
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header -->
-        <div class="hero">
-            <h1>
-                <span>⚽</span> UCL League Phase · Manager
-            </h1>
-            <div class="badge" id="globalStateBadge">
-                💾 Storage ready
-            </div>
+<div class="container" id="app">
+
+    <!-- top stats row (leaders) -->
+    <div class="stat-row">
+        <div class="stat-card"><h4>⭐ top scorer</h4><div class="stat-lead" id="topScorerName">-</div><div class="stat-detail" id="topScorerGoals"></div></div>
+        <div class="stat-card"><h4>🎯 most assists</h4><div class="stat-lead" id="topAssistName">-</div><div class="stat-detail" id="topAssistCount"></div></div>
+        <div class="stat-card"><h4>🟨 yellow card</h4><div class="stat-lead" id="topYellowName">-</div><div class="stat-detail" id="topYellowCount"></div></div>
+        <div class="stat-card"><h4>🟥 red card</h4><div class="stat-lead" id="topRedName">-</div><div class="stat-detail" id="topRedCount"></div></div>
+        <div class="stat-card"><h4>🏆 man of the match</h4><div class="stat-lead" id="topMomName">-</div><div class="stat-detail" id="topMomCount"></div></div>
+    </div>
+
+    <!-- main tabs with reset button -->
+    <div class="stage-tabs">
+        <div class="stage-tab active" data-stage="league">league stage</div>
+        <div class="stage-tab" data-stage="qualifiers">qualifiers (8)</div>
+        <div class="stage-tab" data-stage="ro16">ro16 (8)</div>
+        <div class="stage-tab" data-stage="qf">qf (4)</div>
+        <div class="stage-tab" data-stage="sf">sf (2)</div>
+        <div class="stage-tab" data-stage="final">final (1)</div>
+        <div class="stage-tab" data-stage="suspension">⚠️ suspension & injury</div>
+        <button class="reset-btn" id="resetAllBtn">⟲ RESET ALL DATA</button>
+    </div>
+
+    <!-- LEAGUE PANEL -->
+    <div id="leaguePanel" class="panel active">
+        <div class="matchday-strip" id="matchdayBar"></div>
+        <div id="matchesGrid" class="matches-grid"></div>
+        <div class="section-title">🏆 points table & last 5 form</div>
+        <div class="table-wrap" id="pointsTable"></div>
+    </div>
+
+    <!-- KNOCKOUT PANELS -->
+    <div id="qualifiersPanel" class="panel" style="display:none;"><div class="bracket-grid" id="qualifiersBracket"></div></div>
+    <div id="ro16Panel" class="panel" style="display:none;"><div class="bracket-grid" id="ro16Bracket"></div></div>
+    <div id="qfPanel" class="panel" style="display:none;"><div class="bracket-grid" id="qfBracket"></div></div>
+    <div id="sfPanel" class="panel" style="display:none;"><div class="bracket-grid" id="sfBracket"></div></div>
+    <div id="finalPanel" class="panel" style="display:none;"><div class="bracket-grid" id="finalBracket"></div></div>
+
+    <!-- SUSPENSION PANEL -->
+    <div id="suspensionPanel" class="panel" style="display:none;">
+        <div class="filter-bar">
+            <input type="text" id="suspFilter" placeholder="filter by team / player" style="flex:2;">
+            <select id="suspTypeFilter">
+                <option value="all">all</option>
+                <option value="yellow">yellow alert (2-4)</option>
+                <option value="red">red/suspended</option>
+                <option value="injured">injured</option>
+            </select>
         </div>
-
-        <!-- Main Dashboard Grid -->
-        <div class="dashboard-grid" id="dashboardGrid">
-            <!-- CARD 1: Team Manager -->
-            <div class="card">
-                <div class="card-header">
-                    <h2><span>📋</span> Team Manager</h2>
-                    <span id="teamCountBadge">0</span>
-                </div>
-                <div class="card-content">
-                    <div class="flex-row">
-                        <button class="btn" id="sampleTeamsBtn">🏭 Generate 36 teams</button>
-                        <label class="btn" for="teamsCSVUpload">📎 Teams CSV</label>
-                        <input type="file" id="teamsCSVUpload" accept=".csv" style="display: none;">
-                        <label class="btn" for="playersCSVUpload">📎 Players CSV</label>
-                        <input type="file" id="playersCSVUpload" accept=".csv" style="display: none;">
-                    </div>
-                    <div class="team-cloud" id="teamCloudContainer"></div>
-                    <button class="btn btn-primary" id="loadDataBtn" style="width:100%; margin-top:1rem;">🚀 Load competition data</button>
-                    <div id="dataPipelineStatus" class="status-text"></div>
-                </div>
-            </div>
-
-            <!-- CARD 2: Draw Engine -->
-            <div class="card">
-                <div class="card-header">
-                    <h2><span>🎯</span> Draw & Schedule</h2>
-                    <span id="matchCountBadge">0</span>
-                </div>
-                <div class="card-content">
-                    <div class="flex-row">
-                        <button class="btn btn-primary" id="drawBtn">⚡ Run constraint draw</button>
-                        <button class="btn" id="validateDrawBtn">🔍 Validate</button>
-                    </div>
-                    <div id="drawFeedback" class="feedback-box"></div>
-                    <hr>
-                    <div><strong>📅 Matchdays</strong></div>
-                    <div class="matchday-tabs" id="matchdayTabBar"></div>
-                </div>
-            </div>
-
-            <!-- CARD 3: Matchday Viewer -->
-            <div class="card grid-span-2">
-                <div class="card-header">
-                    <h2><span>📅</span> Matchday viewer</h2>
-                    <span id="currentMDLabel">MD1</span>
-                </div>
-                <div class="card-content">
-                    <div id="matchdayMatchList" class="match-list"></div>
-                </div>
-            </div>
-
-            <!-- CARD 4: Match Editor with SEARCH -->
-            <div class="card">
-                <div class="card-header">
-                    <h2><span>⚙️</span> Match Search & Editor</h2>
-                </div>
-                <div class="card-content">
-                    <!-- SEARCH SECTION -->
-                    <div class="search-section">
-                        <div class="search-row">
-                            <div class="search-input-wrapper">
-                                <input 
-                                    type="text" 
-                                    id="searchInput" 
-                                    placeholder="🔍 Search by team name..." 
-                                >
-                            </div>
-                            <select id="matchdaySearchFilter">
-                                <option value="0">All MD</option>
-                                <option value="1">MD1</option>
-                                <option value="2">MD2</option>
-                                <option value="3">MD3</option>
-                                <option value="4">MD4</option>
-                                <option value="5">MD5</option>
-                                <option value="6">MD6</option>
-                                <option value="7">MD7</option>
-                                <option value="8">MD8</option>
-                            </select>
-                            <button id="searchBtn" class="btn btn-primary">🔍 Search</button>
-                        </div>
-                        
-                        <div class="filter-row">
-                            <select id="teamSearchFilter">
-                                <option value="0">All Teams</option>
-                            </select>
-                            <select id="statusSearchFilter">
-                                <option value="all">All Matches</option>
-                                <option value="unplayed">Not Played</option>
-                                <option value="played">Played</option>
-                            </select>
-                            <button id="resetSearchBtn" class="btn">Reset</button>
-                        </div>
-                    </div>
-
-                    <!-- SEARCH RESULTS -->
-                    <div class="results-section">
-                        <div class="results-header">
-                            <h3>Search Results <span id="resultCount">(0)</span></h3>
-                            <button id="refreshResultsBtn" class="btn btn-sm">↻</button>
-                        </div>
-                        <div id="searchResultsList" class="results-list"></div>
-                    </div>
-
-                    <!-- MATCH EDITOR - FIXED VERSION -->
-                    <div id="matchEditPanel" class="editor-panel" style="display: none;">
-                        <h3>⚽ Edit Match</h3>
-                        
-                        <!-- Score Section -->
-                        <div class="form-row">
-                            <span id="matchHomeName" class="team-badge"></span>
-                            <input type="number" id="homeScore" min="0" class="small-input" value="0">
-                            <span style="font-weight:700; color:var(--primary-600);">:</span>
-                            <input type="number" id="awayScore" min="0" class="small-input" value="0">
-                            <span id="matchAwayName" class="team-badge"></span>
-                        </div>
-                        
-                        <hr>
-                        
-                        <!-- Add Goal Section -->
-                        <div class="goal-section">⚽ Add Goal</div>
-                        
-                        <select id="scorerSelect" class="full-width">
-                            <option value="">Select scorer...</option>
-                        </select>
-                        
-                        <select id="assisterSelect" class="full-width">
-                            <option value="">— no assist —</option>
-                        </select>
-                        
-                        <div class="minute-row">
-                            <input type="number" id="minuteInput" placeholder="min" min="1" max="120" value="45">
-                            <button class="btn btn-sm" id="addGoalEventBtn">➕ Add Goal</button>
-                        </div>
-                        
-                        <!-- Events List (scrollable) -->
-                        <div id="eventsList" class="events-list"></div>
-                        
-                        <hr>
-                        
-                        <!-- MOTM Section -->
-                        <div class="motm-section">🏆 Man of the Match</div>
-                        <select id="motmSelect" class="full-width">
-                            <option value="">— select MOTM —</option>
-                        </select>
-                        
-                        <!-- Save Button - Always Visible -->
-                        <button class="btn btn-primary" id="saveMatchBtn">💾 SAVE MATCH RESULT</button>
-                        <div id="editorError" class="error-msg" style="display:none;"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD 5: League Table -->
-            <div class="card">
-                <div class="card-header">
-                    <h2><span>🏆</span> League table</h2>
-                </div>
-                <div class="card-content">
-                    <div class="table-responsive" id="leagueTableContainer"></div>
-                </div>
-            </div>
-
-            <!-- CARD 6: Top scorers -->
-            <div class="card">
-                <div class="card-header">
-                    <h2><span>⚽</span> Top scorers</h2>
-                </div>
-                <div class="card-content">
-                    <div id="scorersList" class="leaderboard"></div>
-                </div>
-            </div>
-
-            <!-- CARD 7: Top assists -->
-            <div class="card">
-                <div class="card-header">
-                    <h2><span>🅰️</span> Top assists</h2>
-                </div>
-                <div class="card-content">
-                    <div id="assistsList" class="leaderboard"></div>
-                </div>
-            </div>
-
-            <!-- CARD 8: Most MOTM -->
-            <div class="card">
-                <div class="card-header">
-                    <h2><span>⭐</span> Most MOTM</h2>
-                </div>
-                <div class="card-content">
-                    <div id="motmList" class="leaderboard"></div>
-                </div>
-            </div>
-
-            <!-- CARD 9: Export/Import -->
-            <div class="card grid-span-4">
-                <div class="card-header">
-                    <h2><span>💾</span> Storage</h2>
-                </div>
-                <div class="card-content">
-                    <div class="status-banner">
-                        <span><strong>Auto-save enabled</strong> · localStorage</span>
-                        <div class="action-buttons">
-                            <button class="btn" id="exportBtn">📤 Export</button>
-                            <label class="btn" for="importFile">📥 Import</label>
-                            <input type="file" id="importFile" accept=".json" style="display: none;">
-                            <button class="btn" id="resetBtn">🔄 Reset</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="stats-table-wrapper">
+            <table class="stats-table" id="suspensionTable">
+                <thead><tr><th>Player</th><th>Team</th><th>🟨</th><th>🟥</th><th>injured</th><th>status</th></tr></thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Expand/Collapse All Button -->
-    <div class="global-controls">
-        <button class="btn btn-sm" id="expandAllBtn">🔍 Expand All</button>
-        <button class="btn btn-sm" id="collapseAllBtn">📌 Collapse All</button>
+    <!-- FULL STATS TABS - SHOWS ALL PLAYERS (IMPROVED VISIBILITY) -->
+    <div style="margin-top: 50px;" id="fullStatsAccordion">
+        <div class="section-title">📊 COMPLETE PLAYER STATISTICS</div>
+        <div class="stats-subtabs">
+            <span class="stat-subtab active" data-stat="scorers">⚽ ALL SCORERS</span>
+            <span class="stat-subtab" data-stat="assists">🎯 ALL ASSISTS</span>
+            <span class="stat-subtab" data-stat="yellow">🟨 ALL YELLOWS</span>
+            <span class="stat-subtab" data-stat="red">🟥 ALL REDS</span>
+            <span class="stat-subtab" data-stat="mom">🏆 ALL MOM</span>
+        </div>
+        <div class="filter-bar">
+            <input type="text" id="statFilter" placeholder="filter by player/team">
+            <select id="statTeamFilter"><option value="">all teams</option></select>
+        </div>
+        <!-- FULL STAT TABLE - NOW VISIBLE AND STYLED -->
+        <div class="stats-table-wrapper" id="fullStatTable">
+            <table class="stats-table">
+                <thead><tr><th>Player</th><th>Team</th><th>Count</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 
-    <script src="dataStore.js"></script>
-    <script src="csvParser.js"></script>
-    <script src="storage.js"></script>
-    <script src="drawEngine.js"></script>
-    <script src="matchEngine.js"></script>
-    <script src="statsEngine.js"></script>
-    <script src="uiRenderer.js"></script>
-    <script src="app.js"></script>
+    <!-- MODAL -->
+    <div id="matchModal" class="modal">
+        <div class="modal-panel">
+            <div class="modal-header"><span id="modalMatchLabel"></span><span class="close-btn" id="closeModalBtn">&times;</span></div>
+            <div class="modal-section">
+                <h3>⚽ GOALS (own goal, no assist)</h3>
+                <div id="modalGoalsContainer"></div>
+                <button class="add-button" id="addGoalModalBtn">➕ add goal</button>
+            </div>
+            <div class="modal-section">
+                <h3>🟨 YELLOW CARDS</h3>
+                <div id="modalYellowsContainer"></div>
+                <button class="add-button" id="addYellowModalBtn">➕ add yellow</button>
+            </div>
+            <div class="modal-section">
+                <h3>🟥 RED CARDS</h3>
+                <div id="modalRedsContainer"></div>
+                <button class="add-button" id="addRedModalBtn">➕ add red</button>
+            </div>
+            <div class="modal-section">
+                <h3>🤕 INJURY</h3>
+                <div id="modalInjuryContainer"></div>
+                <button class="add-button" id="addInjuryModalBtn">➕ add injured player</button>
+            </div>
+            <div class="modal-section">
+                <h3>🏅 MAN OF THE MATCH</h3>
+                <select id="modalMomSelect" style="width:100%; padding:16px; border-radius:60px;"></select>
+            </div>
+            <button class="save-button" id="saveMatchModalBtn">✔ SAVE MATCH EVENTS</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ----- ALL TEAMS -----
+        const teamStrings = [
+            "Real Madrid,ESP,1","Bayern Munich,GER,1","Manchester City,ENG,1","Paris Saint-Germain,FRA,1",
+            "Liverpool,ENG,1","Barcelona,ESP,1","Inter Milan,ITA,1","Borussia Dortmund,GER,1",
+            "Atletico Madrid,ESP,1","Arsenal,ENG,2","Manchester United,ENG,2","Juventus,ITA,2",
+            "AC Milan,ITA,2","Chelsea,ENG,2","Tottenham Hotspur,ENG,2","Newcastle United,ENG,2",
+            "Bayer Leverkusen,GER,2","Napoli,ITA,2","Benfica,POR,3","Ajax,NED,3","Porto,POR,3",
+            "Atalanta,ITA,3","Sporting CP,POR,3","PSV Eindhoven,NED,3","Galatasaray,TUR,3","Roma,ITA,3",
+            "Monaco,FRA,3","Feyenoord,NED,4","Marseille,FRA,4","Lyon,FRA,4","LOSC Lille,FRA,4",
+            "Athletic Bilbao,ESP,4","Villarreal,ESP,4","Club Brugge,BEL,4","Fenerbahce,TUR,4","RB Leipzig,GER,4"
+        ];
+        const TEAMS = teamStrings.map(s => s.split(',')[0]);
+
+        // ----- ALL PLAYERS (complete) -----
+        const playerFull = [
+            "Club Brugge,Simon Mignolet","Club Brugge,Jorne Seys","Club Brugge,Bjorn Mechele","Club Brugge,Joel Ordonez","Club Brugge,Jorne Spileers","Club Brugge,Raphael Onyedika","Club Brugge,Hans Vanaken","Club Brugge,Lynnt Reis","Club Brugge,Christos Tzolis","Club Brugge,R. Tondomba","Club Brugge,Hugo Vetlesen","Club Brugge,Nordin Jackers","Club Brugge,V. Osuji","Club Brugge,L. Audoor","Club Brugge,Hugo Siquet","Club Brugge,M. Diakhon","Club Brugge,C. Forbs","Club Brugge,C. Sandra","Club Brugge,1 den Heuvel","Club Brugge,A. De Corte","Club Brugge,K. Rochet","Club Brugge,Bjorn Meijer","Club Brugge,S. Gomez Vi","Club Brugge,B. Abdul K","Club Brugge,A. Stankovic","Club Brugge,R. Granados","Club Brugge,F. Lemarecha","Club Brugge,S. Campbell","Club Brugge,G. Nilsson","Club Brugge,N. Tresoldi",
+            "Arsenal,David Raya","Arsenal,Riccardo Calafiori","Arsenal,Gabriel","Arsenal,William Saliba","Arsenal,Jurrien Timber","Arsenal,Declan Rice","Arsenal,Martin Zubimendi","Arsenal,Martin Odegaard","Arsenal,Leandro Trossard","Arsenal,Viktor Gyokeres","Arsenal,Bukayo Saka","Arsenal,Kepa Arrizabalaga","Arsenal,Ben White","Arsenal,Lewis-Skelly","Arsenal,Cristian Mosquera","Arsenal,Mikel Merino","Arsenal,Eberechi Eze","Arsenal,Noni Madueke","Arsenal,Piero Hincapie","Arsenal,Christian Norgaard","Arsenal,Max Dowman","Arsenal,Gabriel Martinelli","Arsenal,Kai Havertz","Arsenal,Gabriel Jesus",
+            "Chelsea,Robert Sanchez","Chelsea,Reece James","Chelsea,Trevoh Chalobah","Chelsea,Axel Disasi","Chelsea,Marc Cucurella","Chelsea,Moises Caicedo","Chelsea,Enzo Fernandez","Chelsea,Cole Palmer","Chelsea,Pedro Neto","Chelsea,J. Gittens","Chelsea,Joao Pedro","Chelsea,F. Jorgensen","Chelsea,Malo Gusto","Chelsea,Jorrel Hato","Chelsea,Wesley Fofana","Chelsea,Romeo Lavia","Chelsea,Andrey Santos","Chelsea,Estevao","Chelsea,Gabriel Slonina","Chelsea,J. Acheampong","Chelsea,Y. Aiao","Chelsea,Levi Colwill","Chelsea,Benoit Badiashile","Chelsea,M. Sarr","Chelsea,Dario Essugo","Chelsea,Alejandro Garnacho","Chelsea,Liam Delap","Chelsea,Marc Guiu",
+            "Liverpool,Alisson","Liverpool,Jeremie Frimpong","Liverpool,Ibrahima Konate","Liverpool,Virgil van Dijk","Liverpool,Milos Kerkez","Liverpool,Ryan Gravenberch","Liverpool,Alexis Mac Allister","Liverpool,Dominik Szoboszlai","Liverpool,Mohamed Salah","Liverpool,Cody Gakpo","Liverpool,Hugo Ekitike","Liverpool,Mamardashvili","Liverpool,Conor Bradley","Liverpool,Andy Robertson","Liverpool,Joe Gomez","Liverpool,Wataru Endo","Liverpool,Florian Wirtz","Liverpool,Federico Chiesa","Liverpool,F. Woodman","Liverpool,A. Pecsi","Liverpool,C. Ramsay","Liverpool,J. Jacquet","Liverpool,G. Leoni","Liverpool,R. Ndukwu","Liverpool,Stefan Bajcetic","Liverpool,M. Ndiaye","Liverpool,T. Nyoni","Liverpool,Curtis Jones","Liverpool,R. Ngumoha","Liverpool,Alexander Isak",
+            "Manchester City,Gianluigi Donnarumma","Manchester City,Matheus Nunes","Manchester City,Ruben Dias","Manchester City,Abdukodir Khusanov","Manchester City,Josko Gvardiol","Manchester City,Rodri","Manchester City,Tijjani Reijnders","Manchester City,Bernardo Silva","Manchester City,Phil Foden","Manchester City,Jeremy Doku","Manchester City,Erling Haaland","Manchester City,James Trafford","Manchester City,Rico Lewis","Manchester City,N. O'Reilly","Manchester City,Nathan Ake","Manchester City,Nico Gonzalez","Manchester City,Rayan Cherki","Manchester City,Omar Marmoush","Manchester City,Marcus Bettinelli","Manchester City,Rayan Ait-Nouri","Manchester City,John Stones","Manchester City,Marc Guehi","Manchester City,M. Alleyne","Manchester City,Mateo Kovacic","Manchester City,Antoine Semenyo","Manchester City,Savinho",
+            "Manchester United,Senne Lammens","Manchester United,Noussair Mazraoui","Manchester United,Leny Yoro","Manchester United,Lisandro Martinez","Manchester United,Patrick Dorgu","Manchester United,Casemiro","Manchester United,Bruno Fernandes","Manchester United,Kobbie Mainoo","Manchester United,Matheus Cunha","Manchester United,Bryan Mbeumo","Manchester United,Benjamin Sesko","Manchester United,Altay Bayindir","Manchester United,Diogo Dalot","Manchester United,Harry Maguire","Manchester United,Manuel Ugarte","Manchester United,Amad Diallo","Manchester United,Mason Mount","Manchester United,Joshua Zirkzee","Manchester United,Tom Heaton","Manchester United,Tyrell Malacia","Manchester United,D. Leon","Manchester United,Matthijs de Ligt","Manchester United,Luke Shaw","Manchester United,Ayden Heaven","Manchester United,Fredricson","Manchester United,J. Fletcher","Manchester United,S. Lacey","Manchester United,B. Mantato","Manchester United,C. Obi-Martin","Manchester United,J. J. Gabriel",
+            "Newcastle United,Nick Pope","Newcastle United,Kieran Trippier","Newcastle United,Fabian Schar","Newcastle United,Dan Burn","Newcastle United,Tino Livramento","Newcastle United,Sandro Tonali","Newcastle United,Bruno Guimaraes","Newcastle United,Joelinton","Newcastle United,Anthony Gordon","Newcastle United,Nick Woltemade","Newcastle United,Anthony Elanga","Newcastle United,Aaron Ramsdale","Newcastle United,Lewis Hall","Newcastle United,Sven Botman","Newcastle United,Malick Thiaw","Newcastle United,Joe Willock","Newcastle United,Harvey Barnes","Newcastle United,Yoane Wissa","Newcastle United,John Ruddy","Newcastle United,Martin Dubravka","Newcastle United,Harrison Ashby","Newcastle United,Alex Murphy","Newcastle United,Emil Krafth","Newcastle United,Lewis Miley","Newcastle United,Jacob Ramsey","Newcastle United,Jacob Murphy","Newcastle United,William Osula",
+            "Tottenham Hotspur,Guglielmo Vicario","Tottenham Hotspur,Pedro Porro","Tottenham Hotspur,Cristian Romero","Tottenham Hotspur,Micky van de Ven","Tottenham Hotspur,Djed Spence","Tottenham Hotspur,Palhinha","Tottenham Hotspur,Pape Matar Sarr","Tottenham Hotspur,Lucas Bergvall","Tottenham Hotspur,Wilson Odobert","Tottenham Hotspur,Dominic Solanke","Tottenham Hotspur,Mohammed Kudus","Tottenham Hotspur,A. Kinsky","Tottenham Hotspur,Destiny Udogie","Tottenham Hotspur,Kevin Danso","Tottenham Hotspur,Rodrigo Bentancur","Tottenham Hotspur,James Maddison","Tottenham Hotspur,Xavi Simons","Tottenham Hotspur,Randal Kolo Muani","Tottenham Hotspur,B. Austin","Tottenham Hotspur,Souza","Tottenham Hotspur,Radu Dragusin","Tottenham Hotspur,Ben Davies","Tottenham Hotspur,Yves Bissouma","Tottenham Hotspur,Archie Gray","Tottenham Hotspur,Dejan Kulusevski","Tottenham Hotspur,Conor Gallagher","Tottenham Hotspur,Richarlison","Tottenham Hotspur,Mathys Tel","Tottenham Hotspur,J. Wilson",
+            "Monaco,L. Hrádecký","Monaco,Vanderson","Monaco,E. Dier","Monaco,S. Elebi","Monaco,Caio Henrique","Monaco,A. Golovin","Monaco,D. Zakaria","Monaco,L. Camara","Monaco,M. Akliouche","Monaco,M. Biereth","Monaco,F. Balogun","Monaco,P. Köhn","Monaco,J. Teze","Monaco,T. Kehrer","Monaco,P. Pogba","Monaco,K. Diatta","Monaco,Ansu Fati","Monaco,P. Brunner","Monaco,Y. Lienard","Monaco,K. Ouattara","Monaco,M. Salisu","Monaco,W. Faes","Monaco,A. Bamba","Monaco,P. Cabral","Monaco,M. Coulibaly","Monaco,S. Idumbo","Monaco,S. Adingra","Monaco,T. Minamino","Monaco,L. Michal",
+            "LOSC Lille,B. Özer","LOSC Lille,T. Meunier","LOSC Lille,N. Ngoy","LOSC Lille,Sandro Ribeiro","LOSC Lille,R. Perraud","LOSC Lille,Félix Correia","LOSC Lille,A. Bouaddi","LOSC Lille,Haraldsson","LOSC Lille,B. André","LOSC Lille,M. Fernandez-Pardo","LOSC Lille,O. Giroud","LOSC Lille,A. Bodart","LOSC Lille,Tiago Santos","LOSC Lille,C. Verdonk","LOSC Lille,C. Mbemba","LOSC Lille,N. Bentaleb","LOSC Lille,O. Sahraoui","LOSC Lille,H. Ighamane","LOSC Lille,M. Caillard","LOSC Lille,A. Mandi","LOSC Lille,O. Touré","LOSC Lille,Rafael Fernandes","LOSC Lille,Andre Gomes","LOSC Lille,N. Mukau","LOSC Lille,E. Mbappe","LOSC Lille,G. Perrin","LOSC Lille,M. Broholm","LOSC Lille,N. Doucet","LOSC Lille,D. Vergara",
+            "Lyon,R. Descamps","Lyon,A. Maitland-Niles","Lyon,Clinton Mata","Lyon,M. Niakhaté","Lyon,N. Tagliafico","Lyon,M. Fofana","Lyon,T. Morton","Lyon,C. Tolisso","Lyon,T. Tessmann","Lyon,A. Karabec","Lyon,Endrick","Lyon,D. Greif","Lyon,Abner","Lyon,H. Hateboer","Lyon,O. Mangala","Lyon,P. Sulc","Lyon,A. Moreira","Lyon,E. Molebe","Lyon,L. Diarra","Lyon,A. Laaziri","Lyon,R. Kluivert","Lyon,M. De Carvalho","Lyon,N. Kamara","Lyon,N. Nartey","Lyon,K. Merah","Lyon,E. Nuamah","Lyon,R. Ghezzal","Lyon,L. Yaremchuk","Lyon,S. Rodriguez",
+            "Marseille,G. Rulli","Marseille,Emerson","Marseille,B. Pavard","Marseille,N. Aguerd","Marseille,F. Medina","Marseille,Igor Paixao","Marseille,P. Højbjerg","Marseille,B. Nadir","Marseille,Q. Timber","Marseille,M. Greenwood","Marseille,A. Gouiri","Marseille,J. de Lange","Marseille,L. Balerdi","Marseille,G. Kondogbia","Marseille,H. Abdelli","Marseille,T. Weah","Marseille,H. Traore","Marseille,Aubameyang","Marseille,J. Zhawaswi","Marseille,T. Vermot","Marseille,C. Egan-Riley","Marseille,A. Vermeere","Marseille,Y. Sellami","Marseille,T. Nnadi","Marseille,F. Mughe","Marseille,K. Abdallah","Marseille,E. Nwaneri",
+            "Paris Saint-Germain,L. Chevalier","Paris Saint-Germain,Nuno Mendes","Paris Saint-Germain,W. Pacho","Paris Saint-Germain,Marquinhos","Paris Saint-Germain,A. Hakimi","Paris Saint-Germain,Fabián Ruiz","Paris Saint-Germain,Vitinha","Paris Saint-Germain,João Neves","Paris Saint-Germain,Khvicha Kvaratskhelia","Paris Saint-Germain,O. Dembélé","Paris Saint-Germain,D. Doué","Paris Saint-Germain,M. Safonov","Paris Saint-Germain,L. Hernández","Paris Saint-Germain,I. Zabarnyi","Paris Saint-Germain,L. Beraldo","Paris Saint-Germain,Warren Zaïre-Emery","Paris Saint-Germain,B. Barcola","Paris Saint-Germain,Gonçalo Ramos","Paris Saint-Germain,R. Marin","Paris Saint-Germain,S. Mayulu","Paris Saint-Germain,Dro","Paris Saint-Germain,Lee Kang In","Paris Saint-Germain,I. Mbaye","Paris Saint-Germain,Q. Ndjantou",
+            "Bayer Leverkusen,M. Flekken","Bayer Leverkusen,E. Tapsoba","Bayer Leverkusen,J. Quansah","Bayer Leverkusen,L. Badé","Bayer Leverkusen,Arthur","Bayer Leverkusen,Grimaldo","Bayer Leverkusen,R. Andrich","Bayer Leverkusen,Aleix García","Bayer Leverkusen,N. Tella","Bayer Leverkusen,M. Tillman","Bayer Leverkusen,P. Schick","Bayer Leverkusen,J. Blaswich","Bayer Leverkusen,Lucas Vázquez","Bayer Leverkusen,A. Tape","Bayer Leverkusen,E. Fernández","Bayer Leverkusen,E. Palacios","Bayer Leverkusen,I. Maza","Bayer Leverkusen,E. Ben Seghir","Bayer Leverkusen,J. Omlin","Bayer Leverkusen,N. Lomb","Bayer Leverkusen,J. Hofmann","Bayer Leverkusen,E. Poku","Bayer Leverkusen,M. Terrier","Bayer Leverkusen,C. Kofane",
+            "Borussia Dortmund,G. Kobel","Borussia Dortmund,R. Bensebaini","Borussia Dortmund,W. Anton","Borussia Dortmund,E. Can","Borussia Dortmund,Yan Couto","Borussia Dortmund,D. Svensson","Borussia Dortmund,J. Bellingham","Borussia Dortmund,F. Nmecha","Borussia Dortmund,K. Adeyemi","Borussia Dortmund,S. Guirassy","Borussia Dortmund,J. Brandt","Borussia Dortmund,A. Meyer","Borussia Dortmund,J. Ryerson","Borussia Dortmund,N. Schlotterbeck","Borussia Dortmund,M. Sabitzer","Borussia Dortmund,Felix Nmecha","Borussia Dortmund,M. Beier","Borussia Dortmund,Fabio Silva","Borussia Dortmund,P. Drewes","Borussia Dortmund,S. Ostrzinski","Borussia Dortmund,A. Kabar","Borussia Dortmund,N. Süle","Borussia Dortmund,F. Mané","Borussia Dortmund,S. Özcan",
+            "Bayern Munich,M. Neuer","Bayern Munich,J. Stanisic","Bayern Munich,J. Tah","Bayern Munich,D. Upamecano","Bayern Munich,K. Laimer","Bayern Munich,L. Goretzka","Bayern Munich,J. Kimmich","Bayern Munich,S. Gnabry","Bayern Munich,L. Díaz","Bayern Munich,M. Olise","Bayern Munich,H. Kane","Bayern Munich,J. Urbig","Bayern Munich,A. Davies","Bayern Munich,R. Guerreiro","Bayern Munich,Kim Min Jae","Bayern Munich,A. Pavlovic","Bayern Munich,T. Bischof","Bayern Munich,N. Jackson","Bayern Munich,S. Ulreich","Bayern Munich,L. Klanac","Bayern Munich,H. Ito","Bayern Munich,Santos Daiber","Bayern Munich,J. Musiala","Bayern Munich,L. Karl","Bayern Munich,W. Mike",
+            "RB Leipzig,P. Gulácsi","RB Leipzig,D. Raum","RB Leipzig,C. Lukeba","RB Leipzig,W. Orbán","RB Leipzig,R. Baku","RB Leipzig,X. Schlager","RB Leipzig,N. Seiwald","RB Leipzig,C. Baumgartner","RB Leipzig,A. Nusa","RB Leipzig,Rômulo","RB Leipzig,J. Bakayoko","RB Leipzig,M. Vandevoordt","RB Leipzig,K. Nedeljkovic","RB Leipzig,L. Klostermann","RB Leipzig,K. Kampl","RB Leipzig,A. Ouedraogo","RB Leipzig,A. Maksimovic","RB Leipzig,C. Harder","RB Leipzig,L. Zingerle","RB Leipzig,B. Henrichs","RB Leipzig,A. Koné","RB Leipzig,M. Finkgräfe","RB Leipzig,E. Bitshiabu","RB Leipzig,E. Banzuzi","RB Leipzig,B. Gruda","RB Leipzig,V. Gebel","RB Leipzig,T. Gomis","RB Leipzig,Y. Diomande","RB Leipzig,Masanka B.",
+            "Atalanta,M. Carnesecchi","Atalanta,B. Djimsiti","Atalanta,I. Hien","Atalanta,G. Scalvini","Atalanta,M. de Roon","Atalanta,M. Pašalić","Atalanta,R. Bellanova","Atalanta,N. Zalewski","Atalanta,Lazar Samardžić","Atalanta,C. De Ketelaere","Atalanta,G. Scamacca","Atalanta,M. Sportiello","Atalanta,M. Bakker","Atalanta,O. Kossounou","Atalanta,Éderson","Atalanta,Y. Musah","Atalanta,D. Zappacosta","Atalanta,N. Krstović","Atalanta,F. Rossi","Atalanta,H. Ahanor","Atalanta,S. Kolašinac","Atalanta,K. Sulemana","Atalanta,Bernasconi","Atalanta,G. Raspadori",
+            "Inter Milan,Y. Sommer","Inter Milan,A. Bastoni","Inter Milan,F. Acerbi","Inter Milan,M. Akanji","Inter Milan,D. Dumfries","Inter Milan,F. Dimarco","Inter Milan,H. Çalhanoğlu","Inter Milan,N. Barella","Inter Milan,H. Mkhitaryan","Inter Milan,L. Martínez","Inter Milan,M. Thuram","Inter Milan,Josep Martínez","Inter Milan,M. Darmian","Inter Milan,Carlos Augusto","Inter Milan,Y. Bisseck","Inter Milan,P. Zieliński","Inter Milan,Luis Henrique","Inter Milan,Y. Bonny","Inter Milan,R. Di Gennaro","Inter Milan,S. de Vrij","Inter Milan,T. Palacios","Inter Milan,L. Jakić","Inter Milan,D. Frattesi","Inter Milan,A. Diouf","Inter Milan,P. Sučić","Inter Milan,F. Esposito",
+            "AC Milan,M. Maignan","AC Milan,S. Pavlović","AC Milan,M. Gabbia","AC Milan,F. Tomori","AC Milan,P. Estupiñán","AC Milan,Y. Fofana","AC Milan,L. Modrić","AC Milan,A. Saelemaekers","AC Milan,Ruben Loftus-Cheek","AC Milan,C. Pulisic","AC Milan,S. Giménez","AC Milan,P. Terracciano","AC Milan,Z. Athekame","AC Milan,K. De Winter","AC Milan,S. Ricci","AC Milan,A. Rabiot","AC Milan,Rafael Leão","AC Milan,N. Füllkrug","AC Milan,L. Torriani","AC Milan,D. Bartesaghi","AC Milan,D. Odogu","AC Milan,A. Jashari","AC Milan,C. Nkunku",
+            "Juventus,A. Di Gregorio","Juventus,L. Kelly","Juventus,Bremer","Juventus,F. Gatti","Juventus,E. Holm","Juventus,A. Cambiaso","Juventus,K. Thuram","Juventus,M. Locatelli","Juventus,Conceição","Juventus,J. David","Juventus,K. Yildiz","Juventus,C. Pinsoglio","Juventus,P. Kalulu","Juventus,W. McKennie","Juventus,Koopmeiners","Juventus,E. Zhegrova","Juventus,F. Kostić","Juventus,D. Vlahović","Juventus,M. Perin","Juventus,J. Cabal","Juventus,J. Rouhi","Juventus,F. Miretti","Juventus,V. Adžić","Juventus,A. Litiņa","Juventus,J. Boga","Juventus,L. Openda","Juventus,A. Milik",
+            "Roma,M. Svilar","Roma,E. Ndicka","Roma,G. Mancini","Roma,Mario Hermoso","Roma,Wesley","Roma,Angeliño","Roma,K. Koné","Roma,B. Cristante","Roma,M. Soulé","Roma,E. Ferguson","Roma,P. Dybala","Roma,P. Gollini","Roma,D. Rensch","Roma,D. Ghilardi","Roma,El Aynaoui","Roma,L. Pellegrini","Roma,El Shaarawy","Roma,A. Dovbyk","Roma,R. Zelezny","Roma,Z. Çelik","Roma,K. Tsimikas","Roma,Ziółkowski","Roma,N. Pisilli","Roma,D. Malen","Roma,L. Venturino","Roma,Bryan","Roma,R. Vaz",
+            "Ajax,V. Jaroš","Ajax,O. Zinchenko","Ajax,Y. Baas","Ajax,K. Itakura","Ajax,T. Tomiyasu","Ajax,J. Mokio","Ajax,D. Klaassen","Ajax,O. Gloukh","Ajax,M. Godts","Ajax,W. Weghorst","Ajax,S. Berghuis","Ajax,M. Paes","Ajax,Lucas Rosa","Ajax,J. Šutalo","Ajax,Y. Regeer","Ajax,K. Fitz-Jim","Ajax,Edvardsen","Ajax,K. Dolberg","Ajax,R. Pasveer","Ajax,J. Heerkens","Ajax,P. Reverso","Ajax,A. Gaaei","Ajax,G. Alders","Ajax,O. Wijndal","Ajax,L. Jetten","Ajax,A. Bouwman","Ajax,S. Steur","Ajax,J. McConnell","Ajax,M. Carrizo","Ajax,R. Bounida","Ajax,M. Ibrahimović","Ajax,D. Konadu",
+            "Feyenoord,T. Wellenreuther","Feyenoord,J. Bos","Feyenoord,T. Watanabe","Feyenoord,A. Ahmedhodzic","Feyenoord,G. Read","Feyenoord,Hwang In-beom","Feyenoord,J. Moder","Feyenoord,S. Steijn","Feyenoord,L. Sauer","Feyenoord,A. Ueda","Feyenoord,A. Moussa","Feyenoord,S. Benda","Feyenoord,J. Lotomba","Feyenoord,G. Smal","Feyenoord,G. Trauner","Feyenoord,T. Targalline","Feyenoord,L. Valente","Feyenoord,C. Tengstedt","Feyenoord,J. Bijlow","Feyenoord,B. Nieuwkoop","Feyenoord,M. Deijl","Feyenoord,J. St. Juste","Feyenoord,T. Beelen","Feyenoord,M. Jeng","Feyenoord,I. Plug","Feyenoord,Kraaijeveld","Feyenoord,S. 't Zand","Feyenoord,Gonçalo Borges","Feyenoord,J. Slory","Feyenoord,R. Sterling","Feyenoord,G. Diarra",
+            "PSV Eindhoven,M. Kovář","PSV Eindhoven,Mauro Júnior","PSV Eindhoven,Gąsiorowski","PSV Eindhoven,R. Flamingo","PSV Eindhoven,S. Dest","PSV Eindhoven,J. Schouten","PSV Eindhoven,J. Veerman","PSV Eindhoven,G. Til","PSV Eindhoven,Van Bommel","PSV Eindhoven,R. Pepi","PSV Eindhoven,I. Perišić","PSV Eindhoven,N. Olij","PSV Eindhoven,K. Sidillia","PSV Eindhoven,Salah-Eddine","PSV Eindhoven,A. Obispo","PSV Eindhoven,I. Saibari","PSV Eindhoven,C. Driouech","PSV Eindhoven,A. Pléa","PSV Eindhoven,N. Schiks","PSV Eindhoven,E. Waayers","PSV Eindhoven,A. Nagalo","PSV Eindhoven,van den Berg","PSV Eindhoven,P. Wanner","PSV Eindhoven,D. Man","PSV Eindhoven,Bajraktarevic","PSV Eindhoven,M. Boadu",
+            "FC Porto,Diogo Costa","FC Porto,Francisco Moura","FC Porto,J. Kiwior","FC Porto,J. Bednarek","FC Porto,Alberto Costa","FC Porto,A. Varela","FC Porto,V. Froholdt","FC Porto,Gabri Veiga","FC Porto,Borja Sainz","FC Porto,Samu Omorodion","FC Porto,William Gomes","FC Porto,Cláudio Ramos","FC Porto,Z. Sanusi","FC Porto,Thiago Silva","FC Porto,P. Rosario","FC Porto,Pepê","FC Porto,Rodrigo Mora","FC Porto,L. de Jong","FC Porto,João Costa","FC Porto,M. Fernandes","FC Porto,N. Pérez","FC Porto,D. Prpić","FC Porto,T. Pérez","FC Porto,S. Fofana","FC Porto,Y. Karamoh","FC Porto,O. Pietuszew","FC Porto,B. Caicedo","FC Porto,T. Moffi","FC Porto,D. Gül",
+            "Benfica,A. Trubin","Benfica,S. Dahl","Benfica,N. Otamendi","Benfica,António Silva","Benfica,A. Dedić","Benfica,F. Aursnes","Benfica,Barenechea","Benfica,R. Rios","Benfica,Schjelderup","Benfica,F. Ivanovic","Benfica,V. Pavlidis","Benfica,Henrique Araújo","Benfica,D. Lukebakio","Benfica,Florentino Luís","Benfica,João Veloso","Benfica,Tomás Araújo","Benfica,A. Bah","Benfica,Samuel Soares","Benfica,H. Sudakov","Benfica,G. Prestiani","Benfica,António Silva Jr","Benfica,Diogo Prioste","Benfica,Bruma","Benfica,Manu Silva","Benfica,Nuno Félix","Benfica,J. Wynder","Benfica,Tiago Ferreira","Benfica,Gonçalo Sobral","Benfica,J. Rego","Benfica,Rafa","Benfica,Gonçalo Cabral",
+            "Sporting CP,Rui Silva","Sporting CP,Ricardo Mangas","Sporting CP,Gonçalo Inácio","Sporting CP,Z. Debast","Sporting CP,Iván Fresneda","Sporting CP,H. Morita","Sporting CP,M. Hjulmand","Sporting CP,Pedro Gonçalves","Sporting CP,Trincão","Sporting CP,Geny Catamo","Sporting CP,L. Suárez","Sporting CP,João Virgínia","Sporting CP,Vagiannidis","Sporting CP,O. Diomande","Sporting CP,Eduardo Quaresma","Sporting CP,O. Ochorashvili","Sporting CP,Dany Quenda","Sporting CP,Fotis Ioannidis","Sporting CP,Diego Callai","Sporting CP,Daniel Bragança","Sporting CP,João Simões","Sporting CP,Luís Guilherme","Sporting CP,S. Faye","Sporting CP,Nuno Santos","Sporting CP,M. Araújo",
+            "Athletic Bilbao,Unai Simón","Athletic Bilbao,Yuri Berchiche","Athletic Bilbao,Dani Vivian","Athletic Bilbao,Aitor Paredes","Athletic Bilbao,Andoni Gorosabel","Athletic Bilbao,Mikel Jauregizar","Athletic Bilbao,Oihan Sancet","Athletic Bilbao,Mikel Vesga","Athletic Bilbao,Nico Williams","Athletic Bilbao,Iñaki Williams","Athletic Bilbao,Gorka Guruzeta","Athletic Bilbao,Alex Padilla","Athletic Bilbao,A. Laporte","Athletic Bilbao,U. Gómez","Athletic Bilbao,Nico Serrano","Athletic Bilbao,Asier Villalibre","Athletic Bilbao,Mikel Santos","Athletic Bilbao,Lekue","Athletic Bilbao,A. Boiro","Athletic Bilbao,G. Arroyo","Athletic Bilbao,Beñat Prados","Athletic Bilbao,Jandro Orellana","Athletic Bilbao,E. Korkut","Athletic Bilbao,Robert Navarro","Athletic Bilbao,Álex Berenguer","Athletic Bilbao,I. Izetta",
+            "Atletico Madrid,J. Oblak","Atletico Madrid,M. Ruggeri","Atletico Madrid,D. Hancko","Atletico Madrid,Le Normand","Atletico Madrid,Marcos Llorente","Atletico Madrid,Alex Baena","Atletico Madrid,Pablo Barrios","Atletico Madrid,Johnny","Atletico Madrid,G. Simeone","Atletico Madrid,J. Álvarez","Atletico Madrid,A. Sørloth","Atletico Madrid,J. Musso","Atletico Madrid,N. Molina","Atletico Madrid,J. Giménez","Atletico Madrid,Koke","Atletico Madrid,T. Almada","Atletico Madrid,N. González","Atletico Madrid,A. Lookman","Atletico Madrid,Pubill","Atletico Madrid,C. Lenglet","Atletico Madrid,Kepler Laveran","Atletico Madrid,O. Vargas","Atletico Madrid,Mendoza Ma","Atletico Madrid,L. Griezmann","Atletico Madrid,Jos Leonardc",
+            "FC Barcelona,Joan García","FC Barcelona,Balde","FC Barcelona,P. Cubarsí","FC Barcelona,Eric García","FC Barcelona,J. Koundé","FC Barcelona,Pedri","FC Barcelona,F. de Jong","FC Barcelona,Fermín López","FC Barcelona,Raphinha","FC Barcelona,Lamine Yamal","FC Barcelona,Robert Lewandowski","FC Barcelona,W. Szczęsny","FC Barcelona,João Cancelo","FC Barcelona,Christensen","FC Barcelona,Gavi","FC Barcelona,Dani Olmo","FC Barcelona,M. Rashford","FC Barcelona,Ferran Torres","FC Barcelona,D. Kochen","FC Barcelona,G. Martín","FC Barcelona,P. Pacífico","FC Barcelona,R. Araújo","FC Barcelona,J. Onstein","FC Barcelona,Marc Casadó","FC Barcelona,Marc Bernal","FC Barcelona,R. Bardghji","FC Barcelona,N. Fernández","FC Barcelona,Abdelkarim",
+            "Real Madrid,Thibaut Courtois","Real Madrid,Trent Alexander-Arnold","Real Madrid,Éder Militão","Real Madrid,Dean Huijsen","Real Madrid,Álvaro Carreras","Real Madrid,Aurélien Tchouaméni","Real Madrid,Federico Valverde","Real Madrid,Jude Bellingham","Real Madrid,Vinícius Jr.","Real Madrid,Arda Güler","Real Madrid,Kylian Mbappé","Real Madrid,Andriy Lunin","Real Madrid,Dani Carvajal","Real Madrid,Fran García","Real Madrid,Antonio Rüdiger","Real Madrid,Franco Mastantuono","Real Madrid,Brahim Díaz","Real Madrid,Rodrygo","Real Madrid,Fran González","Real Madrid,Sergio Mestre","Real Madrid,Ferland Mendy","Real Madrid,David Alaba","Real Madrid,Raúl Asencio","Real Madrid,Eduardo Camavinga","Real Madrid,Dani Ceballos","Real Madrid,Gonzalo García",
+            "Villarreal,Luiz Júnior","Villarreal,Sergi Cardona","Villarreal,Renato Veiga","Villarreal,Juan Foyth","Villarreal,Santiago Mouriño","Villarreal,Dani Parejo","Villarreal,Santi Comesaña","Villarreal,Moleiro","Villarreal,Nicolas Pépé","Villarreal,Ayoze Pérez","Villarreal,Gerard Moreno","Villarreal,Diego Conde","Villarreal,Pedraza","Villarreal,R. Marín","Villarreal,Thomas Partey","Villarreal,Pape Gueye","Villarreal,Tajon Buchanan","Villarreal,G. Mikautadze","Villarreal,Arnau Tenas","Villarreal,Rubén Gómez","Villarreal,A. Freeman","Villarreal,Logan Costa","Villarreal,W. Kambwala","Villarreal,Pau Navarro","Villarreal,Alfonso Pedraza","Villarreal,T. Oluwaseyi","Villarreal,Pau Cabanes",
+            "Fenerbahce,Ederson","Fenerbahce,Milan Škriniar","Fenerbahce,Çağlar Söyüncü","Fenerbahce,Merih Müldür","Fenerbahce,Archie Brown","Fenerbahce,Fred","Fenerbahce,Anderson Talisca","Fenerbahce,N'Golo Kanté","Fenerbahce,Kerem Aktürkoğlu","Fenerbahce,Nelson Semedo","Fenerbahce,Noah Dorgeles","Fenerbahce,İrfan Can Eğribayat","Fenerbahce,Jorrel Hato Josterwolde","Fenerbahce,Rodrigo Becão","Fenerbahce,Edson Álvarez","Fenerbahce,Mert Yandaş","Fenerbahce,Marco Asensio","Fenerbahce,Onur Aydın","Fenerbahce,Mert Günok","Fenerbahce,Tarık Çetin","Fenerbahce,Levent Mercan","Fenerbahce,Mattéo Guendouzi","Fenerbahce,İsmail Yüksek","Fenerbahce,Emre Mor","Fenerbahce,A. Musaba","Fenerbahce,S. Chérif",
+            "Galatasaray,Uğurcan Çakır","Galatasaray,Abdülkerim Bardakcı","Galatasaray,Davinson Sánchez","Galatasaray,Emin Elmalı","Galatasaray,Barış Alper Yılmaz","Galatasaray,Mario Lemina","Galatasaray,Lucas Torreira","Galatasaray,Gabriel Sara","Galatasaray,Leroy Sané","Galatasaray,Victor Osimhen","Galatasaray,R. Sallai","Galatasaray,Günay Güvenç","Galatasaray,Kaan Ayhan","Galatasaray,Ismail Jakobs","Galatasaray,Wilfried Singo","Galatasaray,İlkay Gündoğan","Galatasaray,Yunus Akgün","Galatasaray,Mauro Icardi","Galatasaray,Batuhan Şen","Galatasaray,Sacha Boey","Galatasaray,Metehan Baltacı","Galatasaray,Ali Ünyay","Galatasaray,Renato Nhaqa","Galatasaray,Gökdeniz Gürpüz","Galatasaray,Y. Asprilla","Galatasaray,A. Kutucu","Galatasaray,Noa Lang",
+            "Napoli,Alex Meret","Napoli,Giovanni Di Lorenzo","Napoli,Amir Rrahmani","Napoli,Juan Jesus","Napoli,Leonardo Spinazzola","Napoli,Stanislav Lobotka","Napoli,Scott McTominay","Napoli,Kevin De Bruyne","Napoli,Frank Zambo Anguissa","Napoli,Matteo Politano","Napoli,Rasmus Højlund","Napoli,Vanja Milinković-Savić","Napoli,Mathías Olivera","Napoli,Alessandro Buongiorno","Napoli,Billy Gilmour","Napoli,Eljif Elmas","Napoli,David Neres","Napoli,Romelu Lukaku","Napoli,Nikita Contini","Napoli,Pasquale Mazzocchi","Napoli,Miguel Gutiérrez","Napoli,Sam Beukema","Napoli,Ale Vergara","Napoli,Giovane","Napoli,Alisson","Napoli,Ambrosino"
+        ];
+        const playersByTeam = new Map();
+        TEAMS.forEach(t => playersByTeam.set(t, []));
+        playerFull.forEach(p => {
+            let [team, name] = p.split(',');
+            if (team && name && playersByTeam.has(team)) playersByTeam.get(team).push(name);
+        });
+        TEAMS.forEach(t => { if (playersByTeam.get(t).length===0) playersByTeam.set(t, [`${t} star`]); });
+
+        // ----- STATE -----
+        let matches = [];
+
+        function loadFromStorage() {
+            const saved = localStorage.getItem('championsLeagueData');
+            if (saved) {
+                try {
+                    matches = JSON.parse(saved);
+                } catch (e) {
+                    initMatches();
+                }
+            } else {
+                initMatches();
+            }
+        }
+
+        function initMatches() {
+            matches = [];
+            for (let md=0; md<8; md++) {
+                let mdMatches = [];
+                for (let i=0; i<18; i++) {
+                    mdMatches.push({
+                        home: null, away: null,
+                        homeScore: 0, awayScore: 0,
+                        goals: [], yellows: [], reds: [], injuries: [], mom: null,
+                        played: false
+                    });
+                }
+                matches.push(mdMatches);
+            }
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('championsLeagueData', JSON.stringify(matches));
+        }
+
+        function resetAllData() {
+            if (confirm('Are you sure? All match data will be lost.')) {
+                initMatches();
+                saveToStorage();
+                refreshStats();
+                renderMatchday(currentMatchday);
+            }
+        }
+
+        // stats maps
+        let goalMap = new Map(), assistMap = new Map(), yellowMap = new Map(), redMap = new Map(), momMap = new Map(), injuryMap = new Map();
+        let pointsMap = new Map();
+        TEAMS.forEach(t => pointsMap.set(t, { pld:0, w:0, d:0, l:0, gf:0, ga:0, gd:0, pts:0, form:[] }));
+
+        function refreshStats() {
+            goalMap.clear(); assistMap.clear(); yellowMap.clear(); redMap.clear(); momMap.clear(); injuryMap.clear();
+            TEAMS.forEach(t => pointsMap.set(t, { pld:0, w:0, d:0, l:0, gf:0, ga:0, gd:0, pts:0, form:[] }));
+
+            matches.forEach((md, mdIdx) => {
+                md.forEach(m => {
+                    if (!m.home || !m.away || !m.played) return;
+                    let hP = pointsMap.get(m.home), aP = pointsMap.get(m.away);
+                    hP.pld++; aP.pld++;
+                    hP.gf += m.homeScore; hP.ga += m.awayScore;
+                    aP.gf += m.awayScore; aP.ga += m.homeScore;
+                    if (m.homeScore > m.awayScore) { hP.w++; aP.l++; hP.pts+=3; }
+                    else if (m.homeScore < m.awayScore) { aP.w++; hP.l++; aP.pts+=3; }
+                    else { hP.d++; aP.d++; hP.pts++; aP.pts++; }
+                    hP.gd = hP.gf - hP.ga; aP.gd = aP.gf - aP.ga;
+                    hP.form.push(m.homeScore > m.awayScore ? 'W' : (m.homeScore < m.awayScore ? 'L' : 'D'));
+                    aP.form.push(m.homeScore > m.awayScore ? 'L' : (m.homeScore < m.awayScore ? 'W' : 'D'));
+                    if (hP.form.length>5) hP.form.shift(); if (aP.form.length>5) aP.form.shift();
+
+                    m.goals.forEach(g => {
+                        if (!g.ownGoal && g.scorer) goalMap.set(g.scorer, (goalMap.get(g.scorer)||0)+1);
+                        if (g.assist && g.assist !== 'no assist' && !g.ownGoal) assistMap.set(g.assist, (assistMap.get(g.assist)||0)+1);
+                    });
+                    m.yellows.forEach(y => { if (y.player) yellowMap.set(y.player, (yellowMap.get(y.player)||0)+1); });
+                    m.reds.forEach(r => { if (r.player) redMap.set(r.player, (redMap.get(r.player)||0)+1); });
+                    m.injuries.forEach(inj => { if (inj.player) injuryMap.set(inj.player, mdIdx+1); });
+                    if (m.mom) momMap.set(m.mom, (momMap.get(m.mom)||0)+1);
+                });
+            });
+            updateStatUI(); 
+            renderPointsTable(); 
+            renderSuspensionTable(); 
+            renderFullStatTable('scorers');
+            let teamOpts = '<option value="">all teams</option>'+TEAMS.map(t=>`<option value="${t}">${t}</option>`).join('');
+            document.getElementById('statTeamFilter').innerHTML = teamOpts;
+            saveToStorage();
+        }
+
+        function updateStatUI() {
+            let topS = [...goalMap.entries()].sort((a,b)=>b[1]-a[1])[0];
+            document.getElementById('topScorerName').innerText = topS?.[0]||'-';
+            document.getElementById('topScorerGoals').innerText = topS?.[1]+' goals'||'';
+            let topA = [...assistMap.entries()].sort((a,b)=>b[1]-a[1])[0];
+            document.getElementById('topAssistName').innerText = topA?.[0]||'-';
+            document.getElementById('topAssistCount').innerText = topA?.[1]+' assists'||'';
+            let topY = [...yellowMap.entries()].sort((a,b)=>b[1]-a[1])[0];
+            document.getElementById('topYellowName').innerText = topY?.[0]||'-';
+            document.getElementById('topYellowCount').innerText = topY?.[1]+' yellow'||'';
+            let topR = [...redMap.entries()].sort((a,b)=>b[1]-a[1])[0];
+            document.getElementById('topRedName').innerText = topR?.[0]||'-';
+            document.getElementById('topRedCount').innerText = topR?.[1]+' red'||'';
+            let topM = [...momMap.entries()].sort((a,b)=>b[1]-a[1])[0];
+            document.getElementById('topMomName').innerText = topM?.[0]||'-';
+            document.getElementById('topMomCount').innerText = topM?.[1]+' awards'||'';
+        }
+
+        function renderPointsTable() {
+            let sorted = Array.from(pointsMap.entries()).sort((a,b)=> b[1].pts - a[1].pts || b[1].gd - a[1].gd);
+            let html = '<table class="stats-table"><thead><tr><th>Team</th><th>Pld</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th><th>Form</th></tr></thead><tbody>';
+            sorted.forEach(([team, st]) => {
+                let formHtml = st.form.map(f => `<span class="form-badge ${f==='L'?'l':''}">${f}</span>`).join('');
+                html += `<tr><td>${team}</td><td>${st.pld}</td><td>${st.w}</td><td>${st.d}</td><td>${st.l}</td><td>${st.gf}</td><td>${st.ga}</td><td>${st.gd}</td><td>${st.pts}</td><td>${formHtml}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('pointsTable').innerHTML = html;
+        }
+
+        function renderBracket(panelId, matchesCount) {
+            let cols = matchesCount===8?4: matchesCount===4?2: matchesCount===2?2:1;
+            let html = '';
+            for (let c=0; c<cols; c++) {
+                html += '<div class="bracket-col">';
+                for (let m=0; m< (matchesCount/cols); m++) {
+                    html += `<div class="bracket-match"><select>${TEAMS.map(t=>`<option>${t}</option>`).join('')}</select><span>-</span><select>${TEAMS.map(t=>`<option>${t}</option>`).join('')}</select></div>`;
+                }
+                html += '</div>';
+            }
+            document.getElementById(panelId).innerHTML = `<div class="bracket-grid">${html}</div>`;
+        }
+        renderBracket('qualifiersBracket', 8);
+        renderBracket('ro16Bracket', 8);
+        renderBracket('qfBracket', 4);
+        renderBracket('sfBracket', 2);
+        renderBracket('finalBracket', 1);
+
+        function renderSuspensionTable() {
+            let data = [];
+            let playersSet = new Set([...yellowMap.keys(), ...redMap.keys(), ...injuryMap.keys()]);
+            playersSet.forEach(p => {
+                let y = yellowMap.get(p)||0, r = redMap.get(p)||0, inj = injuryMap.get(p);
+                let team = [...playersByTeam.entries()].find(([t,pl])=>pl.includes(p))?.[0]||'?';
+                data.push({player:p, team, yellow:y, red:r, inj});
+            });
+            let filt = document.getElementById('suspFilter')?.value.toLowerCase()||'';
+            let type = document.getElementById('suspTypeFilter')?.value||'all';
+            data = data.filter(d => 
+                (d.player.toLowerCase().includes(filt) || d.team.toLowerCase().includes(filt)) &&
+                (type==='all' || (type==='yellow' && d.yellow>1 && d.yellow<5) || (type==='red' && d.red>0) || (type==='injured' && d.inj))
+            );
+            let html = '';
+            data.forEach(d => {
+                let status = d.red>0 ? '🔴 suspended' : (d.yellow>=3 ? '⚠️ 3 yellows' : (d.inj ? `🤕 injured md${d.inj}` : 'ok'));
+                html += `<tr><td>${d.player}</td><td>${d.team}</td><td>${d.yellow}</td><td>${d.red}</td><td>${d.inj||'-'}</td><td>${status}</td></tr>`;
+            });
+            document.getElementById('suspensionTable').querySelector('tbody').innerHTML = html;
+        }
+
+        // FULL STAT TABLE - SHOWS EVERY PLAYER
+        function renderFullStatTable(type) {
+            let map = type==='scorers'?goalMap : type==='assists'?assistMap : type==='yellow'?yellowMap : type==='red'?redMap : momMap;
+            let label = type==='scorers'?'goals':type==='assists'?'assists':type==='yellow'?'yellow':type==='red'?'red':'mom';
+            let filt = document.getElementById('statFilter')?.value.toLowerCase()||'';
+            let teamFilt = document.getElementById('statTeamFilter')?.value||'';
+            let rows = [];
+            for (let [p,c] of map.entries()) {
+                let team = [...playersByTeam.entries()].find(([t,pl])=>pl.includes(p))?.[0]||'?';
+                if (p.toLowerCase().includes(filt) && (!teamFilt || team===teamFilt)) rows.push({p,team,c});
+            }
+            rows.sort((a,b)=>b.c - a.c);
+            let html = '';
+            rows.forEach(r => {
+                html += `<tr><td>${r.p}</td><td>${r.team}</td><td><strong>${r.c}</strong></td></tr>`;
+            });
+            document.getElementById('fullStatTable').querySelector('tbody').innerHTML = html;
+        }
+
+        // ----- render matches -----
+        let currentMatchday = 0;
+        function renderMatchday(md) {
+            currentMatchday = md;
+            const grid = document.getElementById('matchesGrid');
+            let html = '';
+            matches[md].forEach((m, idx) => {
+                let homeTeam = m.home || '—';
+                let awayTeam = m.away || '—';
+                let scoreDisplay = m.played ? `${m.homeScore} – ${m.awayScore}` : '–';
+                html += `<div class="match-tile" data-match-index="${idx}">
+                    <div class="match-teams">
+                        <span class="team-badge" data-side="home" data-idx="${idx}">${homeTeam}</span>
+                        <span class="vs-score">${scoreDisplay}</span>
+                        <span class="team-badge" data-side="away" data-idx="${idx}">${awayTeam}</span>
+                    </div>
+                    <button class="edit-btn" data-match-idx="${idx}">✎ edit match details</button>
+                </div>`;
+            });
+            grid.innerHTML = html;
+
+            document.querySelectorAll('.team-badge').forEach(badge => {
+                badge.addEventListener('click', (e) => {
+                    let idx = e.target.dataset.idx;
+                    let side = e.target.dataset.side;
+                    let match = matches[currentMatchday][idx];
+                    let current = side==='home' ? match.home : match.away;
+                    let available = TEAMS.filter(t => {
+                        if (t === current) return true;
+                        return !matches[currentMatchday].some(m => (m.home === t || m.away === t) && (m.home !== current && m.away !== current));
+                    });
+                    let nextIndex = available.indexOf(current) + 1;
+                    if (nextIndex >= available.length) nextIndex = 0;
+                    let newTeam = available[nextIndex] || current;
+                    if (side==='home') match.home = newTeam; else match.away = newTeam;
+                    renderMatchday(currentMatchday);
+                });
+            });
+
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    let idx = e.target.dataset.matchIdx;
+                    openModal(currentMatchday, parseInt(idx));
+                });
+            });
+        }
+
+        // ----- MODAL -----
+        let modalMd, modalIdx;
+        const modal = document.getElementById('matchModal');
+        function openModal(md, idx) {
+            modalMd = md; modalIdx = idx;
+            let m = matches[md][idx];
+            document.getElementById('modalMatchLabel').innerText = `Matchday ${md+1}: ${m.home || '?'} vs ${m.away || '?'}`;
+            document.getElementById('modalGoalsContainer').innerHTML = '';
+            if (m.goals.length===0) addGoalRowToModal();
+            else m.goals.forEach(g => document.getElementById('modalGoalsContainer').appendChild(createModalGoalRow(g)));
+
+            document.getElementById('modalYellowsContainer').innerHTML = '';
+            m.yellows.forEach(y => document.getElementById('modalYellowsContainer').appendChild(createModalCardRow(y)));
+
+            document.getElementById('modalRedsContainer').innerHTML = '';
+            m.reds.forEach(r => document.getElementById('modalRedsContainer').appendChild(createModalCardRow(r)));
+
+            document.getElementById('modalInjuryContainer').innerHTML = '';
+            m.injuries.forEach(i => document.getElementById('modalInjuryContainer').appendChild(createModalCardRow(i)));
+
+            let momSel = document.getElementById('modalMomSelect');
+            momSel.innerHTML = '<option value="">— select MOM —</option>';
+            let allPlayers = (playersByTeam.get(m.home)||[]).concat(playersByTeam.get(m.away)||[]);
+            [...new Set(allPlayers)].forEach(p => {
+                let opt = document.createElement('option');
+                opt.value = p; opt.text = p;
+                if (m.mom === p) opt.selected = true;
+                momSel.add(opt);
+            });
+            modal.style.display = 'flex';
+        }
+
+        function createModalGoalRow(g = {team:'home', scorer:'', assist:'no assist', ownGoal:false}) {
+            let m = matches[modalMd][modalIdx];
+            let div = document.createElement('div'); div.className = 'event-row';
+            let teamSel = document.createElement('select');
+            teamSel.innerHTML = `<option value="home" ${g.team==='home'?'selected':''}>${m.home || 'HOME'}</option><option value="away" ${g.team==='away'?'selected':''}>${m.away || 'AWAY'}</option>`;
+            let scorerSel = document.createElement('select'); scorerSel.innerHTML = '<option value="">scorer</option>';
+            let assistSel = document.createElement('select'); assistSel.innerHTML = '<option value="no assist">no assist</option>';
+            function fillScorer(teamVal) {
+                let teamName = teamVal==='home' ? m.home : m.away;
+                let pl = playersByTeam.get(teamName) || [];
+                scorerSel.innerHTML = '<option value="">scorer</option>' + pl.map(p => `<option ${g.scorer===p?'selected':''}>${p}</option>`).join('');
+            }
+            function fillAssist(teamVal) {
+                let teamName = teamVal==='home' ? m.home : m.away;
+                let pl = playersByTeam.get(teamName) || [];
+                assistSel.innerHTML = '<option value="no assist">no assist</option>' + pl.map(p => `<option ${g.assist===p?'selected':''}>${p}</option>`).join('');
+            }
+            teamSel.onchange = () => { fillScorer(teamSel.value); fillAssist(teamSel.value); };
+            fillScorer(g.team || 'home');
+            fillAssist(g.team || 'home');
+            let ownCheck = document.createElement('input'); ownCheck.type = 'checkbox'; ownCheck.checked = g.ownGoal || false;
+            let ownLabel = document.createElement('label'); ownLabel.className = 'checkbox-label'; ownLabel.appendChild(ownCheck); ownLabel.appendChild(document.createTextNode(' own goal'));
+            div.appendChild(teamSel); div.appendChild(scorerSel); div.appendChild(assistSel); div.appendChild(ownLabel);
+            return div;
+        }
+
+        function createModalCardRow(c = {team:'home', player:''}) {
+            let m = matches[modalMd][modalIdx];
+            let div = document.createElement('div'); div.className = 'event-row';
+            let teamSel = document.createElement('select');
+            teamSel.innerHTML = `<option value="home" ${c.team==='home'?'selected':''}>${m.home}</option><option value="away" ${c.team==='away'?'selected':''}>${m.away}</option>`;
+            let playerSel = document.createElement('select'); playerSel.innerHTML = '<option value="">player</option>';
+            function fillPlayer(teamVal) {
+                let teamName = teamVal==='home' ? m.home : m.away;
+                let pl = playersByTeam.get(teamName) || [];
+                playerSel.innerHTML = '<option value="">player</option>' + pl.map(p => `<option ${c.player===p?'selected':''}>${p}</option>`).join('');
+            }
+            teamSel.onchange = () => fillPlayer(teamSel.value);
+            fillPlayer(c.team || 'home');
+            div.appendChild(teamSel); div.appendChild(playerSel);
+            return div;
+        }
+
+        window.addGoalRowToModal = () => document.getElementById('modalGoalsContainer').appendChild(createModalGoalRow());
+        document.getElementById('addGoalModalBtn').onclick = addGoalRowToModal;
+        document.getElementById('addYellowModalBtn').onclick = () => document.getElementById('modalYellowsContainer').appendChild(createModalCardRow());
+        document.getElementById('addRedModalBtn').onclick = () => document.getElementById('modalRedsContainer').appendChild(createModalCardRow());
+        document.getElementById('addInjuryModalBtn').onclick = () => document.getElementById('modalInjuryContainer').appendChild(createModalCardRow());
+
+        document.getElementById('saveMatchModalBtn').onclick = () => {
+            let m = matches[modalMd][modalIdx];
+            let goalRows = [...document.querySelectorAll('#modalGoalsContainer .event-row')];
+            m.goals = goalRows.map(row => {
+                let team = row.children[0].value;
+                let scorer = row.children[1].value;
+                let assist = row.children[2].value;
+                let own = row.children[3].querySelector('input')?.checked || false;
+                if (!scorer) return null;
+                return { team, scorer, assist: assist==='no assist'?null:assist, ownGoal:own };
+            }).filter(g=>g);
+            m.yellows = [...document.querySelectorAll('#modalYellowsContainer .event-row')].map(row => {
+                let team = row.children[0].value, player = row.children[1].value;
+                return player ? {team, player} : null;
+            }).filter(y=>y);
+            m.reds = [...document.querySelectorAll('#modalRedsContainer .event-row')].map(row => {
+                let team = row.children[0].value, player = row.children[1].value;
+                return player ? {team, player} : null;
+            }).filter(r=>r);
+            m.injuries = [...document.querySelectorAll('#modalInjuryContainer .event-row')].map(row => {
+                let team = row.children[0].value, player = row.children[1].value;
+                return player ? {team, player} : null;
+            }).filter(i=>i);
+            m.mom = document.getElementById('modalMomSelect').value;
+            m.homeScore = m.goals.filter(g => g.team==='home' && !g.ownGoal).length;
+            m.awayScore = m.goals.filter(g => g.team==='away' && !g.ownGoal).length;
+            m.played = true;
+            refreshStats();
+            renderMatchday(modalMd);
+            modal.style.display = 'none';
+        };
+
+        document.getElementById('closeModalBtn').onclick = () => modal.style.display = 'none';
+        window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+        // tabs
+        document.querySelectorAll('.stage-tab').forEach(tab => {
+            if (tab.classList.contains('reset-btn')) return;
+            tab.addEventListener('click', (e) => {
+                document.querySelectorAll('.stage-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+                document.getElementById(tab.dataset.stage + 'Panel').style.display = 'block';
+                if (tab.dataset.stage === 'league') renderMatchday(currentMatchday);
+                if (tab.dataset.stage === 'suspension') { renderSuspensionTable(); }
+            });
+        });
+
+        // full stats subtabs
+        document.querySelectorAll('.stat-subtab').forEach(statTab => {
+            statTab.addEventListener('click', (e) => {
+                document.querySelectorAll('.stat-subtab').forEach(s => s.classList.remove('active'));
+                statTab.classList.add('active');
+                renderFullStatTable(statTab.dataset.stat);
+            });
+        });
+
+        // filter events
+        document.getElementById('statFilter').addEventListener('input', ()=> {
+            let active = document.querySelector('.stat-subtab.active')?.dataset.stat||'scorers';
+            renderFullStatTable(active);
+        });
+        document.getElementById('statTeamFilter').addEventListener('change', ()=> {
+            let active = document.querySelector('.stat-subtab.active')?.dataset.stat||'scorers';
+            renderFullStatTable(active);
+        });
+        document.getElementById('suspFilter').addEventListener('input', renderSuspensionTable);
+        document.getElementById('suspTypeFilter').addEventListener('change', renderSuspensionTable);
+
+        // matchday bar
+        let mdBar = document.getElementById('matchdayBar');
+        for (let i=0; i<8; i++) {
+            let btn = document.createElement('button');
+            btn.className = `md-btn ${i===0?'active':''}`;
+            btn.innerText = `matchday ${i+1}`;
+            btn.dataset.md = i;
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.md-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentMatchday = parseInt(e.target.dataset.md);
+                renderMatchday(currentMatchday);
+            });
+            mdBar.appendChild(btn);
+        }
+
+        // reset button
+        document.getElementById('resetAllBtn').addEventListener('click', resetAllData);
+
+        // initial load
+        loadFromStorage();
+        renderMatchday(0);
+        refreshStats();
+    })();
+</script>
 </body>
 </html>
